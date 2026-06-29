@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aplikasi Laporan Keuangan UMKM</title>
+
+  <!-- Google Fonts Quicksand -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- PDF Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+  <!-- App CSS -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+  <!-- ===== LOGIN FORM ===== -->
+  <div id="loginContainer" class="login-container">
+    <div class="login-wrapper">
+      <div class="bubbles">
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+      </div>
+
+      <div class="login-card">
+        <div class="login-header">
+          <div class="login-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <h2>Selamat Datang</h2>
+          <p>Silakan login untuk melanjutkan</p>
+        </div>
+
+        <!-- Pesan error/sukses — SATU, di luar semua section agar selalu tampil -->
+        <div id="authMessage" class="login-error hidden"></div>
+
+        <!-- LOGIN SECTION -->
+        <div id="loginSection">
+          <form id="loginForm" class="login-form">
+            <div class="form-group">
+              <label><i class="fas fa-user"></i> Username</label>
+              <input type="text" id="loginUsername" placeholder="Masukkan username" required />
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-lock"></i> Password</label>
+              <div class="password-wrapper">
+                <input type="password" id="loginPassword" placeholder="Masukkan password" required />
+                <span class="toggle-password" onclick="togglePassword('loginPassword','eyeIcon')">
+                  <i class="fas fa-eye" id="eyeIcon"></i>
+                </span>
+              </div>
+            </div>
+            <button type="submit">
+              <span>Masuk</span>
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </form>
+
+          <div class="auth-links">
+            <a href="#" id="showRegisterLink">Daftar Akun</a>
+            <span>•</span>
+            <a href="#" id="showForgotLink">Lupa Password?</a>
+          </div>
+        </div>
+
+        <!-- REGISTER SECTION -->
+        <div id="registerSection" class="hidden">
+          <form id="registerForm" class="login-form">
+            <div class="form-group">
+              <label><i class="fas fa-user-plus"></i> Username</label>
+              <input type="text" id="registerUsername" placeholder="Buat username" required />
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-lock"></i> Password</label>
+              <div class="password-wrapper">
+                <input type="password" id="registerPassword" placeholder="Buat password" required />
+                <span class="toggle-password" onclick="togglePassword('registerPassword','registerEyeIcon')">
+                  <i class="fas fa-eye" id="registerEyeIcon"></i>
+                </span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-lock"></i> Konfirmasi Password</label>
+              <input type="password" id="registerConfirmPassword" placeholder="Ulangi password" required />
+            </div>
+            <button type="submit">
+              <span>Daftar</span>
+              <i class="fas fa-user-plus"></i>
+            </button>
+          </form>
+
+          <div class="auth-links">
+            <a href="#" class="show-login-link">Sudah punya akun? Masuk</a>
+          </div>
+        </div>
+
+        <!-- FORGOT PASSWORD SECTION -->
+        <div id="forgotSection" class="hidden">
+          <form id="forgotForm" class="login-form">
+            <div class="form-group">
+              <label><i class="fas fa-user"></i> Username</label>
+              <input type="text" id="forgotUsername" placeholder="Masukkan username terdaftar" required />
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-lock"></i> Password Baru</label>
+              <input type="password" id="forgotPassword" placeholder="Masukkan password baru" required />
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-lock"></i> Konfirmasi Password Baru</label>
+              <input type="password" id="forgotConfirmPassword" placeholder="Ulangi password baru" required />
+            </div>
+            <button type="submit">
+              <span>Reset Password</span>
+              <i class="fas fa-key"></i>
+            </button>
+          </form>
+
+          <div class="auth-links">
+            <a href="#" class="show-login-link">Kembali ke Login</a>
+          </div>
+        </div>
+
+        <div class="login-footer">
+          <p>Aplikasi Keuangan UMKM &copy; 2026</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== KONTEN UTAMA ===== -->
+  <div id="mainContent" class="hidden">
+
+    <header class="header">
+      <div class="header-left">
+        <h1>Laporan Keuangan UMKM</h1>
+        <p>Otomatisasi pencatatan keuangan sederhana</p>
+      </div>
+      <div class="header-right">
+        <!-- User dropdown -->
+        <div class="user-menu" id="userMenu">
+          <button class="user-menu-btn" id="userMenuBtn" onclick="toggleUserMenu()" aria-label="Menu pengguna">
+            <div class="user-avatar"><i class="fas fa-user"></i></div>
+            <span id="headerUsername" class="user-menu-name"></span>
+            <i class="fas fa-chevron-down user-menu-arrow" id="userMenuArrow"></i>
+          </button>
+          <div class="user-dropdown" id="userDropdown">
+            <div class="user-dropdown-info">
+              <div class="user-dropdown-avatar"><i class="fas fa-user-circle"></i></div>
+              <span id="headerUsernameDrop"></span>
+            </div>
+            <hr class="user-dropdown-divider" />
+            <button class="user-dropdown-logout" id="logoutBtn">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <nav class="nav">
+      <ul>
+        <li><a href="#" data-page="Dashboard">Dashboard</a></li>
+        <li><a href="#" data-page="inputTransaksi">Jurnal Umum</a></li>
+        <li><a href="#" data-page="bukuBesar">Buku Besar</a></li>
+        <li><a href="#" data-page="neracaSaldo">Neraca Saldo</a></li>
+        <li><a href="#" data-page="labaRugi">Laba Rugi</a></li>
+        <li><a href="#" data-page="arusKas">Arus Kas</a></li>
+        <li><a href="#" data-page="perubahanModal">Perubahan Modal</a></li>
+        <li><a href="#" data-page="jurnalPenyesuaian">Jurnal Penyesuaian</a></li>
+        <li><a href="#" data-page="Database">Histori</a></li>
+      </ul>
+    </nav>
+
+    <main id="app">
+      <section class="welcome">
+        <h2>Selamat Datang</h2>
+        <p>Gunakan menu di atas untuk mulai mencatat dan mengelola laporan keuangan UMKM Anda.</p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>&copy; 2026 Aplikasi Keuangan UMKM</p>
+    </footer>
+
+  </div>
+
+  <!-- Modal Password -->
+  <div id="passwordModal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Konfirmasi Password</h3>
+      <input type="password" id="passwordInput" placeholder="Masukkan password" />
+      <div class="modal-actions">
+        <button onclick="batalPassword()">Batal</button>
+        <button onclick="submitPassword()">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/modules/Dashboard.js"></script>
+  <script src="assets/js/modules/inputTransaksi.js"></script>
+  <script src="assets/js/modules/bukuBesar.js"></script>
+  <script src="assets/js/modules/neracaSaldo.js"></script>
+  <script src="assets/js/modules/labaRugi.js"></script>
+  <script src="assets/js/modules/arusKas.js"></script>
+  <script src="assets/js/modules/perubahanModal.js"></script>
+  <script src="assets/js/modules/Database.js"></script>
+  <script src="assets/js/modules/jurnalPenyesuaian.js"></script>
+  <script src="assets/js/app.js"></script>
+
+  <!-- Toggle show/hide password — hanya helper UI, tidak konflik dengan app.js -->
+  <script>
+    function togglePassword(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon  = document.getElementById(iconId);
+      if (!input || !icon) return;
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fas fa-eye-slash';
+      } else {
+        input.type = 'password';
+        icon.className = 'fas fa-eye';
+      }
+    }
+  </script>
+
+</body>
+</html>
