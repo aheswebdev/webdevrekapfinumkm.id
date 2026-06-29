@@ -2,10 +2,10 @@
 
 > Aplikasi web berbasis client-side untuk pencatatan dan pelaporan keuangan UMKM secara otomatis, menerapkan prinsip akuntansi dasar (double-entry bookkeeping) dengan **deteksi akun otomatis berbasis kata kunci** dari kalimat keterangan transaksi.
 
-**Versi:** 2.0
+**Versi:** V.3.0.0.6.2.6
 **Tipe Aplikasi:** Single Page Application (SPA) — HTML, CSS, JavaScript (Vanilla JS, tanpa framework)
 **Penyimpanan Data:** Browser `localStorage` (client-side storage)
-**Dibuat oleh:** Al-Hisna Esya Sabila
+**Dibuat oleh:** M. Zaqi Mubarok
 
 ---
 
@@ -112,7 +112,7 @@ Keunikan aplikasi ini terletak pada mekanisme **deteksi otomatis akun debit dan 
 ## 5. Struktur Folder & File
 
 ```
-HISNA UMKM FIX ZQ V.2.0/
+HISNA UMKM FIX ZQ V.3.0.0.6.2.6/
 │
 ├── index.html                     # Entry point aplikasi (satu-satunya halaman HTML)
 ├── README.md                      # Dokumentasi proyek (file ini)
@@ -699,6 +699,7 @@ Atau menggunakan ekstensi **Live Server** pada VS Code.
 | 103 | Piutang | Aset | Debit |
 | 104 | Persediaan | Aset | Debit |
 | 105 | Peralatan | Aset | Debit |
+| 106 | Perlengkapan | Aset | Debit |
 | 201 | Utang Usaha | Liabilitas | Kredit |
 | 202 | Utang Bank | Liabilitas | Kredit |
 | 301 | Modal | Ekuitas | Kredit |
@@ -714,12 +715,12 @@ Atau menggunakan ekstensi **Live Server** pada VS Code.
 | 511 | Harga Pokok Penjualan (HPP) | Beban (Penyesuaian) | Debit |
 
 > Sumber: `AKUN_RULES` pada `assets/js/modules/inputTransaksi.js` (kode 101–505) dan logika tambahan pada `assets/js/modules/jurnalPenyesuaian.js` (kode 511, khusus jurnal penyesuaian HPP).
-
+    
 ---
 
 ## 📝 Catatan Penulis Asli (Riwayat Pengembangan)
 
-Bagian ini merupakan catatan pengembangan awal dari pembuat aplikasi (Al-Hisna Esya Sabila), dipertahankan sebagai dokumentasi historis proses berpikir dan iterasi pengembangan:
+Bagian ini merupakan catatan pengembangan awal dari pembuat aplikasi (M. Zaqi Mubarok), dipertahankan sebagai dokumentasi historis proses berpikir dan iterasi pengembangan:
 
 - Logika dasar: *Buku Kas/Utang/Persediaan → Jurnal Umum → Buku Besar → Laba Rugi/Neraca*.
 - Pemahaman prinsip: "Bayar tagihan/gaji termasuk Debit karena merupakan nilai yang digunakan"; "Prive adalah uang usaha yang dipakai untuk keperluan pribadi".
