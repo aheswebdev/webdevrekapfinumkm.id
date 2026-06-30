@@ -5,11 +5,11 @@
 **Versi:** V.3.0.0.6.2.6
 **Tipe Aplikasi:** Single Page Application (SPA) — HTML, CSS, JavaScript (Vanilla JS, tanpa framework)
 **Penyimpanan Data:** Browser `localStorage` (client-side storage)
-**Dibuat oleh:** M. Zaqi Mubarok & Al Hisna Esya Sabila
+**Dibuat oleh:** M. Zaqi Mubarok & Al-Hisna Esya Sabila
 
 ---
 
-## 📑 Daftar Isi
+## 📑 Kontol
 
 1. [Latar Belakang](#1-latar-belakang)
 2. [Tujuan Aplikasi](#2-tujuan-aplikasi)
@@ -596,7 +596,7 @@ File PDF disimpan dengan format nama: `Mutasi_Transaksi_<username>_<YYYY-MM-DD>.
 Karena aplikasi ini berbasis **client-side murni** (tanpa backend/server, tanpa proses build/compile), cara menjalankannya sangat sederhana:
 
 ### Opsi 1 — Membuka Langsung di Browser
-1. Ekstrak folder proyek (`HISNA UMKM FIX ZQ V.2.0`).
+1. Ekstrak folder proyek (`HISNA UMKM FIX ZQ V.3.0.0.6.2.6`).
 2. Buka file `index.html` dengan double-click, atau klik kanan → *Open with* → browser pilihan (Chrome/Edge/Firefox).
 3. Pastikan komputer/perangkat terhubung internet (untuk memuat Google Fonts, Font Awesome, jsPDF, dan jsPDF-AutoTable dari CDN).
 
@@ -720,7 +720,7 @@ Atau menggunakan ekstensi **Live Server** pada VS Code.
 
 ## 📝 Catatan Penulis Asli (Riwayat Pengembangan)
 
-Bagian ini merupakan catatan pengembangan awal dari pembuat aplikasi (M. Zaqi Mubarok), dipertahankan sebagai dokumentasi historis proses berpikir dan iterasi pengembangan:
+Bagian ini merupakan catatan pengembangan awal dari pembuat aplikasi (M. Zaqi Mubarok & Al-Hisna Esya Sabila), dipertahankan sebagai dokumentasi historis proses berpikir dan iterasi pengembangan:
 
 - Logika dasar: *Buku Kas/Utang/Persediaan → Jurnal Umum → Buku Besar → Laba Rugi/Neraca*.
 - Pemahaman prinsip: "Bayar tagihan/gaji termasuk Debit karena merupakan nilai yang digunakan"; "Prive adalah uang usaha yang dipakai untuk keperluan pribadi".
