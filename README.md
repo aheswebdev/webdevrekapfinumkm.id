@@ -9,7 +9,7 @@
 
 ---
 
-## 📑 Kontol
+## 📑 Daftar Isi
 
 1. [Latar Belakang](#1-latar-belakang)
 2. [Tujuan Aplikasi](#2-tujuan-aplikasi)
