@@ -1,8 +1,8 @@
-# 📊 Aplikasi Laporan Keuangan UMKM (HISNA UMKM)
+# 📊 Aplikasi Laporan Keuangan UMKM ( HISNA UMKM )
 
 > Aplikasi web berbasis client-side untuk pencatatan dan pelaporan keuangan UMKM secara otomatis, menerapkan prinsip akuntansi dasar (double-entry bookkeeping) dengan **deteksi akun otomatis berbasis kata kunci** dari kalimat keterangan transaksi.
 
-**Versi:** V.3.0.0.6.2.6
+**Versi:** 3.0.0.6.2.6
 **Tipe Aplikasi:** Single Page Application (SPA) — HTML, CSS, JavaScript (Vanilla JS, tanpa framework)
 **Penyimpanan Data:** Browser `localStorage` (client-side storage)
 **Dibuat oleh:** M. Zaqi Mubarok & Al-Hisna Esya Sabila
@@ -31,6 +31,9 @@
 18. [Rencana Pengembangan Selanjutnya](#18-rencana-pengembangan-selanjutnya)
 19. [Daftar Pustaka / Referensi Teknis](#19-daftar-pustaka--referensi-teknis)
 20. [Lampiran: Daftar Kode Akun (Chart of Accounts)](#20-lampiran-daftar-kode-akun-chart-of-accounts)
+21. [Tools, Aplikasi, dan Alur Kerja Pengembangan (Development Workflow)](#21-tools-aplikasi-dan-alur-kerja-pengembangan-development-workflow)
+22. [Panduan Setup Repository GitHub](#22-panduan-setup-repository-github)
+23. [Dokumentasi Prototipe untuk Laporan Skripsi](#23-dokumentasi-prototipe-untuk-laporan-skripsi)
 
 ---
 
@@ -604,7 +607,7 @@ Karena aplikasi ini berbasis **client-side murni** (tanpa backend/server, tanpa 
 Beberapa browser membatasi fitur tertentu saat dibuka via `file://`. Disarankan menjalankan via server lokal sederhana, contoh menggunakan Python:
 
 ```bash
-cd "HISNA UMKM FIX ZQ V.2.0"
+cd "HISNA UMKM FIX ZQ V.3.0.0.6.2.6"
 python -m http.server 8080
 ```
 
@@ -699,7 +702,6 @@ Atau menggunakan ekstensi **Live Server** pada VS Code.
 | 103 | Piutang | Aset | Debit |
 | 104 | Persediaan | Aset | Debit |
 | 105 | Peralatan | Aset | Debit |
-| 106 | Perlengkapan | Aset | Debit |
 | 201 | Utang Usaha | Liabilitas | Kredit |
 | 202 | Utang Bank | Liabilitas | Kredit |
 | 301 | Modal | Ekuitas | Kredit |
@@ -715,12 +717,159 @@ Atau menggunakan ekstensi **Live Server** pada VS Code.
 | 511 | Harga Pokok Penjualan (HPP) | Beban (Penyesuaian) | Debit |
 
 > Sumber: `AKUN_RULES` pada `assets/js/modules/inputTransaksi.js` (kode 101–505) dan logika tambahan pada `assets/js/modules/jurnalPenyesuaian.js` (kode 511, khusus jurnal penyesuaian HPP).
-    
+
 ---
 
-## 📝 Catatan Penulis Asli (Riwayat Pengembangan)
+## 21. Tools, Aplikasi, dan Alur Kerja Pengembangan (Development Workflow)
 
-Bagian ini merupakan catatan pengembangan awal dari pembuat aplikasi (M. Zaqi Mubarok & Al-Hisna Esya Sabila), dipertahankan sebagai dokumentasi historis proses berpikir dan iterasi pengembangan:
+Bagian ini menjelaskan perangkat lunak dan alur kerja yang digunakan selama proses pengembangan aplikasi, yang relevan untuk dicantumkan pada bab Metodologi Penelitian/Pengembangan Sistem pada laporan skripsi.
+
+### 21.1 Code Editor / IDE
+| Aplikasi | Fungsi dalam Proyek |
+|----------|----------------------|
+| **Visual Studio Code (VS Code)** | Code editor utama untuk menulis dan mengedit seluruh file HTML, CSS, dan JavaScript proyek. |
+| Ekstensi **Live Server** (VS Code) | Menjalankan aplikasi pada server lokal (`localhost`) secara real-time saat pengembangan, dengan auto-reload setiap file disimpan. |
+| Ekstensi **Prettier** / **ESLint** *(opsional)* | Merapikan format kode dan mendeteksi potensi kesalahan penulisan JavaScript. |
+| **Chrome DevTools** / **Edge DevTools** | Debugging JavaScript (console, breakpoint), inspeksi elemen HTML/CSS, serta pengecekan isi `localStorage` melalui tab *Application*. |
+
+### 21.2 Version Control & Kolaborasi
+| Aplikasi | Fungsi dalam Proyek |
+|----------|----------------------|
+| **Git** | Sistem version control untuk melacak setiap perubahan kode (commit history) selama proses pengembangan. |
+| **GitHub** | Platform hosting repository online, sebagai tempat penyimpanan kode sumber (source code) sekaligus bukti riwayat pengembangan (commit log) yang dapat dilampirkan pada laporan skripsi. |
+| **GitHub Desktop** *(opsional)* | Alternatif antarmuka grafis (GUI) untuk Git bagi yang tidak terbiasa menggunakan command line. |
+
+### 21.3 Desain & Perancangan Antarmuka
+| Aplikasi | Fungsi dalam Proyek |
+|----------|----------------------|
+| **Figma** *(opsional, jika digunakan)* | Merancang wireframe/mockup tampilan antarmuka sebelum diimplementasikan ke kode HTML/CSS. |
+| **Draw.io / Lucidchart / Figma** | Membuat diagram pendukung skripsi seperti *flowchart* alur sistem, ERD/skema data, dan use case diagram. |
+| Sketsa manual (kertas/Notes) | Tahap awal perancangan alur deteksi akun otomatis dan struktur menu sebelum dituangkan ke kode. |
+
+### 21.4 Asisten Pengembangan Berbasis AI
+| Aplikasi | Fungsi dalam Proyek |
+|----------|----------------------|
+| **Claude (Anthropic)** | Digunakan sebagai asisten pemrograman (*pair-programming assistant*) untuk membantu memperbaiki bug, merefactor kode, menyusun dokumentasi teknis, serta menyusun README ini. Penggunaan AI sebagai alat bantu pengembangan dapat disebutkan secara transparan pada bab Metodologi sebagai bagian dari pendekatan pengembangan modern (AI-assisted development). |
+
+> 💡 **Catatan untuk laporan skripsi:** Penggunaan tools AI sebagai asisten coding sah untuk disebutkan pada bagian metodologi, sepanjang logika inti aplikasi (algoritma deteksi akun, struktur data, alur akuntansi) dipahami dan dapat dijelaskan sendiri oleh penulis saat sidang.
+
+### 21.5 Pengujian Aplikasi
+| Metode | Keterangan |
+|--------|------------|
+| **Manual Testing (Black-box)** | Pengujian dilakukan dengan mencoba berbagai skenario input transaksi dan memeriksa apakah laporan yang dihasilkan (jurnal, buku besar, neraca saldo, dst.) sudah benar secara akuntansi. |
+| **Cross-browser Testing** | Aplikasi diuji pada beberapa browser (Chrome, Edge, Firefox) untuk memastikan tampilan dan fungsi `localStorage` berjalan konsisten. |
+| **Device Testing (Responsif)** | Pengecekan tampilan pada ukuran layar berbeda (desktop, tablet, mobile) menggunakan fitur *Device Toolbar* pada Chrome DevTools. |
+
+---
+
+## 22. Panduan Setup Repository GitHub
+
+Bagian ini berguna sebagai lampiran teknis cara mempublikasikan dan menjalankan proyek dari GitHub, sekaligus dapat dijadikan bukti dokumentasi proses pengembangan pada skripsi.
+
+### 22.1 Mengunggah Proyek ke GitHub (Pertama Kali)
+```bash
+# 1. Masuk ke folder proyek
+cd "HISNA UMKM FIX ZQ V.3.0.0.6.2.6"
+
+# 2. Inisialisasi git
+git init
+
+# 3. Tambahkan seluruh file ke staging area
+git add .
+
+# 4. Buat commit pertama
+git commit -m "Initial commit: HISNA UMKM v2.0"
+
+# 5. Hubungkan ke repository GitHub (buat repo baru di github.com terlebih dahulu)
+git branch -M main
+git remote add origin https://github.com/USERNAME/NAMA-REPO.git
+
+# 6. Push ke GitHub
+git push -u origin main
+```
+
+### 22.2 Struktur `.gitignore` yang Disarankan
+```
+# Tidak ada dependency/node_modules karena tanpa framework,
+# namun jika menambahkan tools build di masa depan:
+node_modules/
+.DS_Store
+*.log
+.vscode/
+```
+
+### 22.3 Konvensi Commit (disarankan untuk riwayat pengembangan yang rapi)
+| Prefix | Contoh | Keterangan |
+|--------|--------|------------|
+| `feat:` | `feat: tambah deteksi otomatis jurnal penyesuaian` | Penambahan fitur baru |
+| `fix:` | `fix: perbaiki klasifikasi modal awal di perubahanModal.js` | Perbaikan bug |
+| `refactor:` | `refactor: rapikan struktur Dashboard.js` | Perubahan kode tanpa mengubah fungsi |
+| `docs:` | `docs: lengkapi README untuk laporan skripsi` | Perubahan dokumentasi |
+| `style:` | `style: perbaiki tampilan UI dashboard` | Perubahan tampilan/CSS |
+
+### 22.4 Mengkloning Ulang Proyek (di Perangkat Lain)
+```bash
+git clone https://github.com/USERNAME/NAMA-REPO.git
+cd NAMA-REPO
+# Buka index.html langsung, atau jalankan via Live Server / python -m http.server
+```
+
+### 22.5 Deploy Online *(opsional, untuk demo saat sidang)*
+Karena aplikasi 100% client-side (tanpa backend), proyek ini dapat di-*deploy* gratis tanpa konfigurasi rumit:
+
+| Platform | Cara Singkat |
+|----------|--------------|
+| **GitHub Pages** | Repository → *Settings* → *Pages* → pilih branch `main` dan folder root → simpan. Aplikasi otomatis dapat diakses via `https://USERNAME.github.io/NAMA-REPO/`. |
+| **Netlify** | Drag-and-drop folder proyek ke dashboard Netlify, atau hubungkan langsung ke repository GitHub untuk auto-deploy setiap kali push. |
+| **Vercel** | Import repository GitHub melalui dashboard Vercel, deploy otomatis tanpa konfigurasi build khusus. |
+
+> Deploy online sangat berguna untuk demo aplikasi saat sidang skripsi karena penguji dapat mengakses aplikasi langsung lewat link tanpa perlu instalasi.
+
+---
+
+## 23. Dokumentasi Prototipe untuk Laporan Skripsi
+
+Bagian ini merupakan panduan singkat menyusun bukti prototipe pada laporan/dokumen skripsi, sesuai kebutuhan umum format Bab III/IV (Implementasi & Pengujian).
+
+### 23.1 Tahapan Prototipe yang Dapat Dilaporkan
+1. **Analisis Kebutuhan** — identifikasi masalah pencatatan keuangan manual UMKM (lihat [Bab 1](#1-latar-belakang)).
+2. **Perancangan (Design)** — wireframe/mockup alur menu, perancangan skema data `localStorage` (lihat [Bab 9](#9-struktur--skema-data-localstorage)), perancangan algoritma deteksi akun (lihat [Bab 8](#8-algoritma-deteksi-akun-otomatis)).
+3. **Implementasi (Coding)** — penulisan kode menggunakan VS Code, diuji secara bertahap per modul (lihat [Bab 21.1](#21-tools-aplikasi-dan-alur-kerja-pengembangan-development-workflow)).
+4. **Pengujian (Testing)** — black-box testing per fitur, cross-browser testing (lihat [Bab 21.5](#21-tools-aplikasi-dan-alur-kerja-pengembangan-development-workflow)).
+5. **Evaluasi & Iterasi** — perbaikan bug dan penyempurnaan UI berdasarkan hasil pengujian dan diskusi dengan dosen pembimbing.
+
+### 23.2 Saran Tangkapan Layar (Screenshot) untuk Lampiran
+Untuk melengkapi bukti prototipe pada dokumen skripsi, disarankan menyertakan tangkapan layar berikut:
+- Halaman Login & Registrasi.
+- Dashboard ringkasan.
+- Form Input Transaksi (Jurnal Umum) beserta contoh kalimat keterangan.
+- Tabel Buku Besar (per akun).
+- Tabel Neraca Saldo.
+- Laporan Laba Rugi.
+- Laporan Arus Kas.
+- Laporan Perubahan Modal.
+- Halaman Jurnal Penyesuaian.
+- Halaman Histori Transaksi.
+- Contoh hasil **Export PDF** (mutasi transaksi).
+- Tampilan responsif pada perangkat mobile (opsional, untuk menunjukkan aplikasi mobile-friendly).
+
+### 23.3 Tabel Pengujian (Contoh Format Black-box Testing)
+| No | Skenario Pengujian | Input | Hasil yang Diharapkan | Status |
+|----|---------------------|-------|------------------------|--------|
+| 1 | Registrasi akun baru | Username & password valid | Akun tersimpan, redirect ke login | ✅ Sesuai |
+| 2 | Login dengan password salah | Username benar, password salah | Muncul pesan error | ✅ Sesuai |
+| 3 | Input transaksi "kas penjualan" | Tanggal, "kas penjualan", nominal | Debit: Kas, Kredit: Penjualan | ✅ Sesuai |
+| 4 | Input transaksi tidak dikenali | Tanggal, kalimat acak, nominal | Muncul peringatan keterangan tidak dikenali | ✅ Sesuai |
+| 5 | Export PDF histori transaksi | Klik tombol Download | File PDF mutasi transaksi terunduh | ✅ Sesuai |
+| 6 | Hapus transaksi tanpa password benar | Password salah saat konfirmasi | Penghapusan dibatalkan | ✅ Sesuai |
+
+> Tabel di atas hanya contoh format; lengkapi dengan skenario pengujian aktual sesuai hasil uji coba pribadi sebelum dilampirkan ke laporan skripsi.
+
+---
+
+## 📝 Catatan Penulis Asli ( Riwayat Pengembangan )
+
+Bagian ini merupakan catatan pengembangan awal dari pembuat aplikasi ( M.Zaqi Mubarok & Al-Hisna Esya Sabila ), dipertahankan sebagai dokumentasi historis proses berpikir dan iterasi pengembangan:
 
 - Logika dasar: *Buku Kas/Utang/Persediaan → Jurnal Umum → Buku Besar → Laba Rugi/Neraca*.
 - Pemahaman prinsip: "Bayar tagihan/gaji termasuk Debit karena merupakan nilai yang digunakan"; "Prive adalah uang usaha yang dipakai untuk keperluan pribadi".
@@ -729,4 +878,4 @@ Bagian ini merupakan catatan pengembangan awal dari pembuat aplikasi (M. Zaqi Mu
 
 ---
 
-*Dokumen ini dapat digunakan sebagai lampiran teknis (technical documentation) pada laporan skripsi/tugas akhir terkait pengembangan sistem informasi akuntansi sederhana untuk UMKM.*
+*Dokumen ini dapat digunakan sebagai lampiran teknis ( technical documentation ) pada laporan skripsi/tugas akhir terkait pengembangan sistem informasi akuntansi sederhana untuk UMKM.*
