@@ -5,7 +5,7 @@
 **Versi:** V.3.0.0.6.2.6
 **Tipe Aplikasi:** Single Page Application (SPA) — HTML, CSS, JavaScript (Vanilla JS, tanpa framework)
 **Penyimpanan Data:** Browser `localStorage` (client-side storage)
-**Dibuat oleh:** M. Zaqi Mubarok
+**Dibuat oleh:** M. Zaqi Mubarok & Al Hisna Esya Sabila
 
 ---
 
