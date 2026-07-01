@@ -149,7 +149,7 @@ function renderJurnalPenyesuaianPersediaan() {
   }
 
   // ===============================
-  // 3B. RENDER TABEL PERLENGKAPAN
+  // 3b. RENDER TABEL PERLENGKAPAN
   // ===============================
   let rowsPerlengkapan = "";
   let totalPerlengkapan = 0;
@@ -196,12 +196,7 @@ function renderJurnalPenyesuaianPersediaan() {
   } else {
     dataHPP.forEach((t, index) => {
       const akunTarget = t.akunTarget || "Persediaan";
-      let kodeAkun = "113"; // default Persediaan
-      if (akunTarget === "Peralatan") {
-        kodeAkun = "105";
-      } else if (akunTarget === "Perlengkapan") {
-        kodeAkun = "114";
-      }
+      const kodeAkun = akunTarget === "Peralatan" ? "105" : "113";
       const labelSumber = t.sumber === "otomatis" ? "🔄 Otomatis" : "✏️ Manual";
       rowsInputHPP += `
         <tr>
@@ -231,7 +226,7 @@ function renderJurnalPenyesuaianPersediaan() {
   // ===============================
   // 5. HITUNG TOTAL
   // ===============================
-  const totalAset = totalPeralatan + totalPersediaan + totalPerlengkapan;
+  const totalAset = totalPeralatan + totalPersediaan;
   const totalHPP = dataHPP.reduce((sum, item) => sum + item.total, 0);
   const totalPenyesuaian = totalHPP; // sesuai screenshot
 
@@ -260,7 +255,7 @@ function renderJurnalPenyesuaianPersediaan() {
         <div class="form-group">
           <label>Keterangan</label>
           <input type="text" id="keterangan" placeholder="Contoh: pemakaian persediaan 1 bulan" required />
-          <small style="color: #666;">Masukkan kata "persediaan", "peralatan", atau "perlengkapan" untuk menentukan akun target.</small>
+          <small style="color: #666;">Masukkan kata "persediaan" atau "peralatan" untuk menentukan akun target.</small>
         </div>
         <div class="form-group">
           <label>Jumlah (Rp)</label>
@@ -271,7 +266,7 @@ function renderJurnalPenyesuaianPersediaan() {
       <small style="color: #2563eb;">💡 Atau masukkan transaksi biasa dengan kata "HPP" atau "pemakaian" di keterangan untuk otomatis.</small>
     </section>
 
-    <section class="cardHPP cardHPP-persediaan">
+    <section class="cardHPP">
       <h2>Jurnal Penyesuaian - Persediaan <small></small></h2>
       <table class="table">
         <thead>
@@ -297,7 +292,7 @@ function renderJurnalPenyesuaianPersediaan() {
       </table>
     </section>
 
-    <section class="cardHPP cardHPP-peralatan">
+    <section class="cardHPP">
       <h2>Jurnal Penyesuaian - Peralatan <small></small></h2>
       <table class="table">
         <thead>
@@ -323,7 +318,7 @@ function renderJurnalPenyesuaianPersediaan() {
       </table>
     </section>
 
-    <section class="cardHPP cardHPP-perlengkapan">
+    <section class="cardHPP">
       <h2>Jurnal Penyesuaian - Perlengkapan <small></small></h2>
       <table class="table">
         <thead>
@@ -349,7 +344,12 @@ function renderJurnalPenyesuaianPersediaan() {
       </table>
     </section>
 
-    <section class="cardHPP cardHPP-manual">
+    <section class="cardTotalAset">
+      <h3>Total Aset (Persediaan + Peralatan)</h3>
+      <p class="amount">${formatRupiah(totalAset)}</p>
+    </section>
+
+    <section class="cardHPP">
       <h2>Penyesuaian HPP Bulanan <small></small></h2>
       <table class="table">
         <thead>
@@ -391,9 +391,7 @@ function renderJurnalPenyesuaianPersediaan() {
 
     // Tentukan akun target berdasarkan kata kunci di keterangan
     let akunTarget = "Persediaan"; // default
-    if (keterangan.toLowerCase().includes("perlengkapan")) {
-      akunTarget = "Perlengkapan";
-    } else if (keterangan.toLowerCase().includes("peralatan")) {
+    if (keterangan.toLowerCase().includes("peralatan")) {
       akunTarget = "Peralatan";
     }
 
