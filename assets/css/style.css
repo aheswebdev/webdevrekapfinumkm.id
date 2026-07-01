@@ -1032,4 +1032,7 @@ main#app {
   border-left: 6px solid #89aa14;
   padding: 18px 22px;
   border-radius: 10px;
-  margin: 20px au
+  margin: 20px auto;
+}
+.cardTotalAset h3 { margin: 0; font-size: 15px; color: #374151; }
+.cardTotalAset .amount { margin-top: 6px; font-size: 26px; font-weight: 700; color: #16a34a; }
