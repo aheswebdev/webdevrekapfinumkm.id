@@ -84,6 +84,8 @@ const AKUN_RULES = [
   { kode: "103", nama: "Piutang", kategori: "aset", saldoNormal: "debit", idnama: "piutang" },
   { kode: "104", nama: "Persediaan", kategori: "aset", saldoNormal: "debit", idnama: "persediaan" },
   { kode: "105", nama: "Peralatan", kategori: "aset", saldoNormal: "debit", idnama: "peralatan" },
+   { kode: "106", nama: "Perlengkapan", kategori: "aset", saldoNormal: "debit", idnama: "perlengkapan" },
+  
 
   { kode: "201", nama: "Utang Usaha", kategori: "liabilitas", saldoNormal: "kredit", idnama: "utang usaha" },
   { kode: "202", nama: "Utang Bank", kategori: "liabilitas", saldoNormal: "kredit", idnama: "utang bank" },
