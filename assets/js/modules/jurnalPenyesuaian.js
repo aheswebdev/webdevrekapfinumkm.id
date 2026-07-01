@@ -24,6 +24,15 @@ function renderJurnalPenyesuaianPersediaan() {
     );
   });
 
+  // Filter transaksi perlengkapan
+  const dataPerlengkapan = transaksi.filter(t => {
+    const { debit, kredit } = tentukanDebitKredit(t);
+    return (
+      debit.nama.toLowerCase() === "perlengkapan" ||
+      kredit.nama.toLowerCase() === "perlengkapan"
+    );
+  });
+
   // Filter transaksi HPP (otomatis dari kata kunci di keterangan)
   const dataHPPOtomatis = transaksi.filter(t => {
     const text = t.keterangan.toLowerCase();
@@ -140,6 +149,45 @@ function renderJurnalPenyesuaianPersediaan() {
   }
 
   // ===============================
+  // 3B. RENDER TABEL PERLENGKAPAN
+  // ===============================
+  let rowsPerlengkapan = "";
+  let totalPerlengkapan = 0;
+
+  if (dataPerlengkapan.length === 0) {
+    rowsPerlengkapan = `<tr><td colspan="7" style="text-align:center;">Belum ada data perlengkapan</td></tr>`;
+  } else {
+    dataPerlengkapan.forEach((t, index) => {
+      const { debit, kredit } = tentukanDebitKredit(t);
+
+      if (debit.nama.toLowerCase() === "perlengkapan") {
+        totalPerlengkapan += t.jumlah;
+      }
+      if (kredit.nama.toLowerCase() === "perlengkapan") {
+        totalPerlengkapan -= t.jumlah;
+      }
+
+      rowsPerlengkapan += `
+        <tr>
+          <td rowspan="2">${index + 1}</td>
+          <td rowspan="2">${formatTanggal(t.tanggal)}</td>
+          <td>${debit.kode}</td>
+          <td rowspan="2">${t.keterangan}</td>
+          <td>${capitalize(debit.nama)}</td>
+          <td class="text-right">${formatRupiah(t.jumlah)}</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>${kredit.kode}</td>
+          <td style="padding-left:20px">${capitalize(kredit.nama)}</td>
+          <td></td>
+          <td class="text-right">${formatRupiah(t.jumlah)}</td>
+        </tr>
+      `;
+    });
+  }
+
+  // ===============================
   // 4. RENDER TABEL HPP BULANAN (OTOMATIS + MANUAL)
   // ===============================
   let rowsInputHPP = "";
@@ -148,7 +196,12 @@ function renderJurnalPenyesuaianPersediaan() {
   } else {
     dataHPP.forEach((t, index) => {
       const akunTarget = t.akunTarget || "Persediaan";
-      const kodeAkun = akunTarget === "Peralatan" ? "105" : "113";
+      let kodeAkun = "113"; // default Persediaan
+      if (akunTarget === "Peralatan") {
+        kodeAkun = "105";
+      } else if (akunTarget === "Perlengkapan") {
+        kodeAkun = "114";
+      }
       const labelSumber = t.sumber === "otomatis" ? "🔄 Otomatis" : "✏️ Manual";
       rowsInputHPP += `
         <tr>
@@ -178,7 +231,7 @@ function renderJurnalPenyesuaianPersediaan() {
   // ===============================
   // 5. HITUNG TOTAL
   // ===============================
-  const totalAset = totalPeralatan + totalPersediaan;
+  const totalAset = totalPeralatan + totalPersediaan + totalPerlengkapan;
   const totalHPP = dataHPP.reduce((sum, item) => sum + item.total, 0);
   const totalPenyesuaian = totalHPP; // sesuai screenshot
 
@@ -207,7 +260,7 @@ function renderJurnalPenyesuaianPersediaan() {
         <div class="form-group">
           <label>Keterangan</label>
           <input type="text" id="keterangan" placeholder="Contoh: pemakaian persediaan 1 bulan" required />
-          <small style="color: #666;">Masukkan kata "persediaan" atau "peralatan" untuk menentukan akun target.</small>
+          <small style="color: #666;">Masukkan kata "persediaan", "peralatan", atau "perlengkapan" untuk menentukan akun target.</small>
         </div>
         <div class="form-group">
           <label>Jumlah (Rp)</label>
@@ -270,8 +323,34 @@ function renderJurnalPenyesuaianPersediaan() {
       </table>
     </section>
 
+    <section class="cardHPP">
+      <h2>Jurnal Penyesuaian - Perlengkapan <small></small></h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Tanggal</th>
+            <th>Kode</th>
+            <th>Keterangan</th>
+            <th>Akun</th>
+            <th class="text-right">Debit</th>
+            <th class="text-right">Kredit</th>
+          </tr>
+        </thead>
+        <tbody>${rowsPerlengkapan}</tbody>
+        <tfoot>
+          <tr>
+            <th colspan="5" class="text-right">Total Perlengkapan</th>
+            <th colspan="2" class="text-right">
+              ${formatRupiah(totalPerlengkapan)}
+            </th>
+          </tr>
+        </tfoot>
+      </table>
+    </section>
+
     <section class="cardTotalAset">
-      <h3>Total Aset (Persediaan + Peralatan)</h3>
+      <h3>Total Aset (Persediaan + Peralatan + Perlengkapan)</h3>
       <p class="amount">${formatRupiah(totalAset)}</p>
     </section>
 
@@ -317,7 +396,9 @@ function renderJurnalPenyesuaianPersediaan() {
 
     // Tentukan akun target berdasarkan kata kunci di keterangan
     let akunTarget = "Persediaan"; // default
-    if (keterangan.toLowerCase().includes("peralatan")) {
+    if (keterangan.toLowerCase().includes("perlengkapan")) {
+      akunTarget = "Perlengkapan";
+    } else if (keterangan.toLowerCase().includes("peralatan")) {
       akunTarget = "Peralatan";
     }
 
