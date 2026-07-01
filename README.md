@@ -702,6 +702,7 @@ Atau menggunakan ekstensi **Live Server** pada VS Code.
 | 103 | Piutang | Aset | Debit |
 | 104 | Persediaan | Aset | Debit |
 | 105 | Peralatan | Aset | Debit |
+| 106 | Perlengkapan | Aset | Debit |
 | 201 | Utang Usaha | Liabilitas | Kredit |
 | 202 | Utang Bank | Liabilitas | Kredit |
 | 301 | Modal | Ekuitas | Kredit |
