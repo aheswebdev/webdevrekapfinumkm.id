@@ -271,7 +271,7 @@ function renderJurnalPenyesuaianPersediaan() {
       <small style="color: #2563eb;">💡 Atau masukkan transaksi biasa dengan kata "HPP" atau "pemakaian" di keterangan untuk otomatis.</small>
     </section>
 
-    <section class="cardHPP">
+    <section class="cardHPP cardHPP-persediaan">
       <h2>Jurnal Penyesuaian - Persediaan <small></small></h2>
       <table class="table">
         <thead>
@@ -297,7 +297,7 @@ function renderJurnalPenyesuaianPersediaan() {
       </table>
     </section>
 
-    <section class="cardHPP">
+    <section class="cardHPP cardHPP-peralatan">
       <h2>Jurnal Penyesuaian - Peralatan <small></small></h2>
       <table class="table">
         <thead>
@@ -323,7 +323,7 @@ function renderJurnalPenyesuaianPersediaan() {
       </table>
     </section>
 
-    <section class="cardHPP">
+    <section class="cardHPP cardHPP-perlengkapan">
       <h2>Jurnal Penyesuaian - Perlengkapan <small></small></h2>
       <table class="table">
         <thead>
@@ -349,12 +349,7 @@ function renderJurnalPenyesuaianPersediaan() {
       </table>
     </section>
 
-    <section class="cardTotalAset">
-      <h3>Total Aset (Persediaan + Peralatan + Perlengkapan)</h3>
-      <p class="amount">${formatRupiah(totalAset)}</p>
-    </section>
-
-    <section class="cardHPP">
+    <section class="cardHPP cardHPP-manual">
       <h2>Penyesuaian HPP Bulanan <small></small></h2>
       <table class="table">
         <thead>
