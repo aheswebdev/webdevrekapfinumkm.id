@@ -185,10 +185,10 @@
 }
 
 /* Login Button */
-#loginForm button[type="submit"] {
+#loginBtn {
   width: 100%;
   padding: 16px;
-  background: linear-gradient(135deg, #2563eb, #38bdf8);
+  background: linear-gradient(135deg, #667eea, #764ba2);
   border: none;
   border-radius: 12px;
   color: #ffffff;
@@ -203,29 +203,29 @@
   margin-top: 8px;
 }
 
-#loginForm button[type="submit"]:hover {
+#loginBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(37, 99, 235, 0.4);
+  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
 }
 
-#loginForm button[type="submit"]:active {
+#loginBtn:active {
   transform: translateY(0);
 }
 
-#loginForm button[type="submit"] i {
+#loginBtn i {
   transition: transform 0.3s ease;
 }
 
-#loginForm button[type="submit"]:hover i {
+#loginBtn:hover i {
   transform: translateX(4px);
 }
 
-/* Samakan tampilan tombol Daftar & Reset Password dengan tombol Masuk */
-#registerForm button[type="submit"],
-#forgotForm button[type="submit"] {
+/* Register & Forgot Password Button (sama seperti loginBtn) */
+#registerBtn,
+#forgotBtn {
   width: 100%;
   padding: 16px;
-  background: linear-gradient(135deg, #2563eb, #38bdf8);
+  background: linear-gradient(135deg, #667eea, #764ba2);
   border: none;
   border-radius: 12px;
   color: #ffffff;
@@ -240,20 +240,15 @@
   margin-top: 8px;
 }
 
-#registerForm button[type="submit"]:hover,
-#forgotForm button[type="submit"]:hover {
+#registerBtn:hover,
+#forgotBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(37, 99, 235, 0.4);
+  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
 }
 
-#registerForm button[type="submit"]:active,
-#forgotForm button[type="submit"]:active {
+#registerBtn:active,
+#forgotBtn:active {
   transform: translateY(0);
-}
-
-#registerForm button[type="submit"] i,
-#forgotForm button[type="submit"] i {
-  transition: transform 0.3s ease;
 }
 
 /* Login Error */
@@ -293,13 +288,11 @@
 }
 
 .auth-links a {
-  color: #60a5fa;
-  font-weight: 600;
+  color: #a5b4fc;
   text-decoration: none;
 }
 
 .auth-links a:hover {
-  color: #93c5fd;
   text-decoration: underline;
 }
 
@@ -315,14 +308,100 @@
   color: rgba(255, 255, 255, 0.3);
   font-size: 13px;
 }
+/* ===============================
+   MODAL KONFIRMASI PASSWORD
+================================= */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal.hidden {
+  display: none !important;
+}
+
+.modal-content {
+  background: #ffffff;
+  padding: 30px 40px;
+  border-radius: 16px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.modal-content h3 {
+  margin-bottom: 20px;
+  color: #1e293b;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.modal-content input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.modal-actions button {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.modal-actions button:first-child {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.modal-actions button:first-child:hover {
+  background: #cbd5e1;
+}
+
+.modal-actions button:last-child {
+  background: #2563eb;
+  color: #fff;
+}
+
+.modal-actions button:last-child:hover {
+  background: #1d4ed8;
+}
+
+.modal-actions button:active {
+  transform: scale(0.96);
+}
 
 /* ===============================
    RESET & GLOBAL (Style Lama)
 ================================= */
-html {
-  color-scheme: light;
-}
-
 * {
   margin: 0;
   padding: 0;
@@ -354,76 +433,6 @@ body {
 
 .hidden {
   display: none !important;
-}
-
-/* ===============================
-   MODAL PASSWORD
-================================= */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-.modal-content {
-  background: #ffffff;
-  padding: 24px;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 340px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  text-align: center;
-}
-.modal-content h3 {
-  margin-bottom: 16px;
-  color: #111827;
-  font-size: 20px;
-}
-.modal-content input[type="password"] {
-  width: 100%;
-  padding: 10px 12px;
-  margin-bottom: 16px;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  font-size: 15px;
-}
-.modal-content input[type="password"]:focus {
-  outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
-}
-.modal-actions {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-}
-.modal-actions button {
-  padding: 8px 20px;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
-}
-.modal-actions button:first-child {
-  background: #e5e7eb;
-  color: #111827;
-}
-.modal-actions button:first-child:hover {
-  background: #d1d5db;
-}
-.modal-actions button:last-child {
-  background: #2563eb;
-  color: #ffffff;
-}
-.modal-actions button:last-child:hover {
-  background: #141c36;
 }
 
 /* ===============================
@@ -855,60 +864,6 @@ main#app {
 .perubahan-modal-table th.text-right { text-align: center; }
 .perubahan-modal-table tr:last-child th { background-color: #f1e78f; font-weight: 700; font-size: 1rem; }
 
-/* ===============================
-   JURNAL PENYESUAIAN (cardHPP) - DARK THEME
-================================= */
-.cardHPP {
-  padding: 16px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
-  color: #f1f5f9;
-}
-.cardHPP h2 {
-  color: #ffffff;
-  margin-bottom: 12px;
-  font-size: 1.15rem;
-  font-weight: 700;
-}
-.cardHPP .table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.cardHPP .table th {
-  padding: 10px 12px;
-  font-weight: 700;
-  color: #ffffff;
-  background-color: rgba(0, 0, 0, 0.35);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-}
-.cardHPP .table td {
-  padding: 10px 12px;
-  color: #f1f5f9;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-.cardHPP .table tbody tr:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-}
-.cardHPP .table tfoot th {
-  background-color: rgba(0, 0, 0, 0.25);
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 1rem;
-}
-.cardHPP .delete-cell {
-  text-align: center;
-  cursor: pointer;
-}
-
-/* Semua section warna hitam (tidak berwarna-warni) */
-.cardHPP-persediaan,
-.cardHPP-peralatan,
-.cardHPP-perlengkapan,
-.cardHPP-manual {
-  background: linear-gradient(180deg, #1f1f1f, #0a0a0a);
-}
-
 .cardDatabase {
   background: #0f172a;
   border-radius: 14px;
@@ -954,4 +909,127 @@ main#app {
 
 .btn-delete-all {
   background: linear-gradient(135deg, #e53935, #c62828);
-  col
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 16px 0;
+  box-shadow: 0 4px 10px rgba(229, 57, 53, 0.35);
+  transition: all 0.25s ease;
+}
+.btn-delete-all:hover {
+  background: linear-gradient(135deg, #f44336, #b71c1c);
+  box-shadow: 0 6px 14px rgba(229, 57, 53, 0.45);
+}
+
+.btn-download {
+  background: linear-gradient(135deg, #059669, #047857);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 16px 8px;
+  box-shadow: 0 4px 10px rgba(5, 150, 105, 0.35);
+  transition: all 0.25s ease;
+}
+.btn-download:hover {
+  background: linear-gradient(135deg, #10b981, #065f46);
+  box-shadow: 0 6px 14px rgba(5, 150, 105, 0.45);
+}
+/* ===============================
+   TOMBOL DOWNLOAD PDF
+================================= */
+.btn-download {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 16px 8px;
+  box-shadow: 0 4px 10px rgba(220, 38, 38, 0.35);
+  transition: all 0.25s ease;
+}
+
+.btn-download:hover {
+  background: linear-gradient(135deg, #ef4444, #991b1b);
+  box-shadow: 0 6px 14px rgba(220, 38, 38, 0.45);
+}
+
+.database-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cardHPP {
+  background: #290f2a;
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.cardHPP h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #e5e7eb;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 12px;
+}
+.cardHPP .table thead th {
+  background: #020617;
+  color: #cbd5f5;
+  font-weight: 600;
+  padding: 12px;
+  text-align: left;
+  font-size: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.cardHPP .table tbody td {
+  padding: 10px 12px;
+  font-size: 16px;
+  color: #e5e7eb;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.cardHPP .table tbody tr:hover {
+  background: rgba(148, 163, 184, 0.08);
+}
+.cardHPP .text-right { text-align: right; }
+.cardHPP .delete-cell { text-align: center; vertical-align: middle; font-size: 42px; cursor: pointer; user-select: none; }
+.cardHPP .delete-cell:hover { transform: scale(1.2); transition: 0.15s ease; }
+
+.table tfoot tr { border-top: 2px solid #333; }
+.table tfoot th {
+  background-color: #f5f5f5;
+  font-weight: 700;
+  padding: 10px 8px;
+  font-size: 18px;
+}
+.table tfoot th.text-right { text-align: center; }
+
+.cardTotalAset {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-left: 6px solid #89aa14;
+  padding: 18px 22px;
+  border-radius: 10px;
+  margin: 20px au
