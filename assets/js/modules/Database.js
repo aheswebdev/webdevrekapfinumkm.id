@@ -169,8 +169,8 @@ function downloadDatabasePDF() {
     var doc       = new jsPDF("portrait", "mm", "a4");
     var pw        = doc.internal.pageSize.getWidth();   // 210
     var ph        = doc.internal.pageSize.getHeight();  // 297
-    var ml        = 12; // margin left
-    var mr        = 12; // margin right
+    var ml        = 14; // margin left
+    var mr        = 14; // margin right
     var cw        = pw - ml - mr; // content width
     var username  = localStorage.getItem("username") || "-";
     var now       = new Date();
@@ -179,16 +179,9 @@ function downloadDatabasePDF() {
     var noDokumen = "STMT/" + username.toUpperCase().replace(/\s+/g, "") + "/" +
       now.toISOString().slice(0, 10).replace(/-/g, "") + "/" +
       String(now.getTime()).slice(-5);
-    
-    // Nomor nasabah
-    var noNasabah = "ACC" + String(now.getTime()).slice(-8);
 
     var fmtTgl = function(d) {
       return d.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
-    };
-    
-    var fmtTglFull = function(d) {
-      return d.toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric" });
     };
 
     // ── urutkan transaksi berdasarkan tanggal (ascending) ─────
@@ -220,212 +213,154 @@ function downloadDatabasePDF() {
     var saldoAkhir = saldoAwal + kasIn - kasOut;
 
     // ── warna tema ────────────────────────────────────────────
-    var BIRU   = [0, 51, 102];   // biru gelap ala mutasi bank
-    var BIRU_MUDA = [0, 102, 204];
-    var BIRU_CERAH = [25, 118, 210];
+    var BIRU   = [0, 68, 148];   // biru ala rekening koran
+    var BIRU2  = [0, 102, 204];
     var ABU    = [245, 247, 250];
     var ABU2   = [230, 234, 240];
-    var ABU3   = [220, 225, 235];
     var HITAM  = [30, 30, 30];
     var PUTIH  = [255, 255, 255];
     var HIJAU  = [0, 130, 70];
     var MERAH  = [200, 30, 30];
-    var ORANGE = [255, 140, 0];
 
     // ──────────────────────────────────────────────────────────
-    // HEADER — KOP BANK STYLE
+    // HEADER — KOP REKENING KORAN
     // ──────────────────────────────────────────────────────────
     doc.setFillColor.apply(doc, BIRU);
-    doc.rect(0, 0, pw, 50, "F");
+    doc.rect(0, 0, pw, 38, "F");
 
-    // Judul utama
-    doc.setFontSize(18);
+    doc.setFontSize(16);
     doc.setFont("helvetica", "bold");
     doc.setTextColor.apply(doc, PUTIH);
-    doc.text("LAPORAN MUTASI REKENING", ml, 16);
-    
-    // Subtitle
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(200, 220, 255);
-    doc.text("APLIKASI KEUANGAN UMKM — Sistem Manajemen Kas dan Keuangan", ml, 23);
+    doc.text("APLIKASI KEUANGAN UMKM", ml, 13);
 
-    // Informasi dokumen mini (kiri bawah)
-    doc.setFontSize(7);
-    doc.setTextColor(180, 200, 240);
+    doc.setFontSize(9);
     doc.setFont("helvetica", "normal");
-    doc.text("No. Dokumen: " + noDokumen, ml, 31);
-    doc.text("Dicetak: " + fmtTglFull(now), ml, 36);
-    
-    // Info di sebelah kanan header
-    var infoRx = pw - mr - 60;
+    doc.text("Laporan Mutasi Rekening / Buku Kas", ml, 20);
+
     doc.setFontSize(7);
-    doc.setTextColor(180, 200, 240);
-    doc.setFont("helvetica", "normal");
-    doc.text("No. Nasabah / Pemilik:", infoRx, 31);
+    doc.setTextColor(210, 222, 245);
+    doc.text("No. Dokumen: " + noDokumen, ml, 26);
+
+    // Kotak kanan atas — info periode
+    doc.setFillColor(0, 50, 120);
+    doc.roundedRect(pw - mr - 68, 5, 68, 28, 3, 3, "F");
+    doc.setFontSize(7);
+    doc.setTextColor.apply(doc, PUTIH);
     doc.setFont("helvetica", "bold");
-    doc.text(noNasabah, infoRx, 36);
-    
-    // Garis tebal bawah header
-    doc.setDrawColor(255, 255, 255);
-    doc.setLineWidth(1.2);
-    doc.line(0, 50, pw, 50);
+    doc.text("PERIODE LAPORAN", pw - mr - 64, 12);
+    doc.setFont("helvetica", "normal");
+    doc.text(fmtTgl(tglAwal) + " – " + fmtTgl(tglAkhir), pw - mr - 64, 18);
+    doc.setFont("helvetica", "bold");
+    doc.text("Dicetak: " + fmtTgl(now), pw - mr - 64, 25);
+
+    // Garis bawah header
+    doc.setDrawColor.apply(doc, BIRU2);
+    doc.setLineWidth(0.8);
+    doc.line(0, 38, pw, 38);
 
     // ──────────────────────────────────────────────────────────
-    // IDENTITAS PEMILIK & REKENING (lebih lengkap)
+    // INFO NASABAH / PEMILIK
     // ──────────────────────────────────────────────────────────
-    var y = 56;
-    
-    // Box info pemilik
+    var y = 44;
     doc.setFillColor.apply(doc, ABU);
-    doc.roundedRect(ml, y, cw, 24, 2, 2, "F");
-    doc.setDrawColor(180, 185, 200);
-    doc.setLineWidth(0.5);
-    doc.roundedRect(ml, y, cw, 24, 2, 2, "S");
+    doc.roundedRect(ml, y, cw, 26, 2, 2, "F");
+    doc.setDrawColor.apply(doc, ABU2);
+    doc.setLineWidth(0.4);
+    doc.roundedRect(ml, y, cw, 26, 2, 2, "S");
 
-    var colW = cw / 4;
-    
-    // Kolom 1 — Nama Pemilik
-    doc.setFontSize(6.5);
-    doc.setTextColor(80, 80, 80);
+    doc.setFontSize(7.5);
+    doc.setTextColor(100, 100, 100);
     doc.setFont("helvetica", "normal");
-    doc.text("NAMA PEMILIK / NASABAH", ml + 3, y + 5);
+
+    // Kolom kiri
+    doc.text("Nama Pemilik", ml + 4, y + 7);
     doc.setFont("helvetica", "bold");
     doc.setTextColor.apply(doc, HITAM);
-    doc.setFontSize(8);
-    doc.text(username.toUpperCase(), ml + 3, y + 11);
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(6.5);
-    doc.setTextColor(100, 100, 100);
-    doc.text("(UMKM)", ml + 3, y + 16);
-    doc.text("Mata Uang: IDR (Rupiah)", ml + 3, y + 21);
+    doc.text(username.toUpperCase(), ml + 4, y + 13);
 
-    // Kolom 2 — Tipe Rekening & Status
-    var col2X = ml + colW + 3;
-    doc.setFontSize(6.5);
-    doc.setTextColor(80, 80, 80);
     doc.setFont("helvetica", "normal");
-    doc.text("TIPE REKENING", col2X, y + 5);
+    doc.setTextColor(100, 100, 100);
+    doc.text("Jenis Usaha", ml + 4, y + 20);
     doc.setFont("helvetica", "bold");
     doc.setTextColor.apply(doc, HITAM);
-    doc.setFontSize(8);
-    doc.text("Buku Kas / Mutasi", col2X, y + 11);
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(6.5);
-    doc.setTextColor(100, 100, 100);
-    doc.text("Status: AKTIF", col2X, y + 16);
-    doc.text("Jenis: Laporan Keuangan", col2X, y + 21);
+    doc.text("UMKM", ml + 4, y + 26);
 
-    // Kolom 3 — Periode & Jumlah Transaksi
-    var col3X = ml + colW * 2 + 3;
-    doc.setFontSize(6.5);
-    doc.setTextColor(80, 80, 80);
+    // Kolom tengah
+    var cx = ml + cw * 0.38;
     doc.setFont("helvetica", "normal");
-    doc.text("PERIODE LAPORAN", col3X, y + 5);
+    doc.setTextColor(100, 100, 100);
+    doc.text("Total Transaksi", cx, y + 7);
     doc.setFont("helvetica", "bold");
     doc.setTextColor.apply(doc, HITAM);
-    doc.setFontSize(8);
-    doc.text(fmtTgl(tglAwal), col3X, y + 11);
-    doc.text("s.d.", col3X, y + 14.5);
-    doc.text(fmtTgl(tglAkhir), col3X, y + 18);
-    
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(6.5);
-    doc.setTextColor(100, 100, 100);
-    doc.text("Total: " + transaksi.length + " transaksi", col3X, y + 21);
+    doc.text(transaksi.length + " transaksi", cx, y + 13);
 
-    // Kolom 4 — Total Debit/Kredit
-    var col4X = ml + colW * 3 + 3;
-    doc.setFontSize(6.5);
-    doc.setTextColor(80, 80, 80);
-    doc.setFont("helvetica", "normal");
-    doc.text("TOTAL PERIODE", col4X, y + 5);
-    
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(7);
-    doc.setTextColor(0, 130, 70);
-    doc.text("Masuk: " + rupiahPDF(kasIn), col4X, y + 11);
-    
-    doc.setTextColor(200, 30, 30);
-    doc.text("Keluar: " + rupiahPDF(kasOut), col4X, y + 16);
-    
-    doc.setTextColor(0, 68, 148);
-    doc.setFont("helvetica", "bold");
-    doc.text("Bersih: " + rupiahPDF(saldoAkhir), col4X, y + 21);
-
-    // ──────────────────────────────────────────────────────────
-    // RINGKASAN SALDO — DESTAK UTAMA BANK STYLE
-    // ──────────────────────────────────────────────────────────
-    y += 28;
-    
-    // Background box
-    doc.setFillColor.apply(doc, BIRU_CERAH);
-    doc.roundedRect(ml, y, cw, 22, 2, 2, "F");
-    doc.setFillColor(210, 235, 255);
-    doc.roundedRect(ml + 1, y + 1, cw - 2, 20, 1, 1, "F");
-
-    doc.setFontSize(7);
-    doc.setTextColor(0, 0, 0);
-    doc.setFont("helvetica", "normal");
-    doc.text("RINGKASAN POSISI SALDO", ml + 4, y + 4);
-
-    // Saldo Awal
-    doc.setFontSize(7);
-    doc.setTextColor(100, 100, 100);
-    doc.setFont("helvetica", "normal");
-    doc.text("Saldo Awal", ml + 4, y + 10);
-    doc.setFontSize(9);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(0, 68, 148);
-    doc.text(rupiahPDF(saldoAwal), ml + 4, y + 16);
-
-    // Kas Masuk
-    doc.setFontSize(7);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(100, 100, 100);
-    doc.text("+ Kas Masuk", ml + cw * 0.27, y + 10);
-    doc.setFontSize(9);
+    doc.text("Periode", cx, y + 20);
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(0, 130, 70);
-    doc.text(rupiahPDF(kasIn), ml + cw * 0.27, y + 16);
+    doc.setTextColor.apply(doc, HITAM);
+    doc.text(fmtTgl(tglAwal) + " s.d. " + fmtTgl(tglAkhir), cx, y + 26);
 
-    // Kas Keluar
-    doc.setFontSize(7);
+    // Kolom kanan — saldo
+    var rx = ml + cw * 0.73;
     doc.setFont("helvetica", "normal");
     doc.setTextColor(100, 100, 100);
-    doc.text("- Kas Keluar", ml + cw * 0.52, y + 10);
-    doc.setFontSize(9);
+    doc.text("Total Kas Masuk", rx, y + 7);
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(200, 30, 30);
-    doc.text(rupiahPDF(kasOut), ml + cw * 0.52, y + 16);
+    doc.setTextColor.apply(doc, HIJAU);
+    doc.text(rupiahPDF(kasIn), rx, y + 13);
 
-    // Saldo Akhir (MENONJOL)
-    doc.setFillColor(0, 68, 148);
-    doc.roundedRect(ml + cw * 0.72, y + 7, cw * 0.24, 12, 2, 2, "F");
-    
-    doc.setFontSize(6.5);
     doc.setFont("helvetica", "normal");
-    doc.setTextColor(180, 200, 255);
-    doc.text("SALDO AKHIR", ml + cw * 0.73, y + 10);
-    doc.setFontSize(8.8);
+    doc.setTextColor(100, 100, 100);
+    doc.text("Total Kas Keluar", rx, y + 20);
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(255, 255, 255);
-    var saldoAkhirX = ml + cw * 0.72 + (cw * 0.24) / 2;
-    doc.text(rupiahPDF(saldoAkhir), saldoAkhirX, y + 16.5, { align: "center", maxWidth: cw * 0.22 });
+    doc.setTextColor.apply(doc, MERAH);
+    doc.text(rupiahPDF(kasOut), rx, y + 26);
 
     // ──────────────────────────────────────────────────────────
-    // TABEL MUTASI DETAIL
+    // RINGKASAN SALDO — strip biru
     // ──────────────────────────────────────────────────────────
-    y += 28;
+    y += 30;
+    doc.setFillColor.apply(doc, BIRU);
+    doc.roundedRect(ml, y, cw, 14, 2, 2, "F");
 
     doc.setFontSize(8);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor.apply(doc, PUTIH);
+    doc.text("Saldo Awal", ml + 4, y + 5.5);
+    doc.setFont("helvetica", "bold");
+    doc.text(rupiahPDF(saldoAwal), ml + 4, y + 11);
+
+    doc.setFont("helvetica", "normal");
+    doc.text("+ Kas Masuk", ml + cw * 0.28, y + 5.5);
+    doc.setFont("helvetica", "bold");
+    doc.text(rupiahPDF(kasIn), ml + cw * 0.28, y + 11);
+
+    doc.setFont("helvetica", "normal");
+    doc.text("- Kas Keluar", ml + cw * 0.54, y + 5.5);
+    doc.setFont("helvetica", "bold");
+    doc.text(rupiahPDF(kasOut), ml + cw * 0.54, y + 11);
+
+    doc.setFont("helvetica", "normal");
+    doc.text("= Saldo Akhir", ml + cw * 0.78, y + 5.5);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
+    doc.setTextColor(255, 230, 100);
+    doc.text(rupiahPDF(saldoAkhir), ml + cw * 0.78, y + 11);
+
+    // ──────────────────────────────────────────────────────────
+    // TABEL MUTASI
+    // ──────────────────────────────────────────────────────────
+    y += 18;
+
+    doc.setFontSize(9);
     doc.setFont("helvetica", "bold");
     doc.setTextColor.apply(doc, BIRU);
-    doc.text("RINCIAN MUTASI TRANSAKSI", ml, y + 3);
-    doc.setLineWidth(0.8);
+    doc.text("RINCIAN MUTASI TRANSAKSI", ml, y + 5);
+    doc.setLineWidth(0.5);
     doc.setDrawColor.apply(doc, BIRU);
-    doc.line(ml, y + 5, ml + 70, y + 5);
-    y += 8;
+    doc.line(ml, y + 7, ml + 72, y + 7);
+    y += 11;
 
     // Buat data tabel — satu baris per transaksi (ringkas seperti mutasi bank)
     var saldoBerjalan = saldoAwal;
@@ -442,17 +377,15 @@ function downloadDatabasePDF() {
 
       // Nomor referensi unik per transaksi (mirip kode referensi mutasi bank)
       var refRaw = (t.id || "").split("-")[1] || String(i + 1);
-      var ref    = "REF" + refRaw.slice(-5);
+      var ref    = "RF" + refRaw.slice(-6);
 
-      // Jenis transaksi untuk info
-      var jenisTxn = isKasMasuk ? "DEBIT" : isKasKeluar ? "KREDIT" : "TF";
+      // Label jenis akun
       var akunLabel = capitalize(dk.debit.nama) + " / " + capitalize(dk.kredit.nama);
 
       tableRows.push([
         (i + 1).toString(),
         formatTanggal(t.tanggal),
         ref,
-        jenisTxn,
         t.keterangan,
         akunLabel,
         debitCell,
@@ -463,25 +396,24 @@ function downloadDatabasePDF() {
 
     // Baris total
     tableRows.push([
-      { content: "", colSpan: 6, styles: { fillColor: [230, 234, 240] } },
+      { content: "TOTAL", colSpan: 5, styles: { halign: "right", fontStyle: "bold", fillColor: [230, 234, 240] } },
       { content: rupiahPDF(kasIn),  styles: { halign: "right", fontStyle: "bold", fillColor: [230, 234, 240], textColor: [0, 130, 70] } },
       { content: rupiahPDF(kasOut), styles: { halign: "right", fontStyle: "bold", fillColor: [230, 234, 240], textColor: [200, 30, 30] } },
-      { content: "TOTAL", styles: { halign: "right", fontStyle: "bold", fillColor: [0, 68, 148], textColor: [255, 255, 255] } }
+      { content: rupiahPDF(saldoAkhir), styles: { halign: "right", fontStyle: "bold", fillColor: [0, 68, 148], textColor: [255, 230, 100] } }
     ]);
 
     doc.autoTable({
       startY: y,
-      margin: { left: ml, right: mr, bottom: 16 },
+      margin: { left: ml, right: mr, bottom: 14 },
       head: [[
-        { content: "No",        styles: { halign: "center", fontSize: 7 } },
-        { content: "Tanggal",   styles: { halign: "center", fontSize: 7 } },
-        { content: "Ref",       styles: { halign: "center", fontSize: 7 } },
-        { content: "Jenis",     styles: { halign: "center", fontSize: 7 } },
-        { content: "Keterangan",styles: { halign: "left",   fontSize: 7 } },
-        { content: "Akun",      styles: { halign: "left",   fontSize: 7 } },
-        { content: "Debit",     styles: { halign: "right",  fontSize: 7 } },
-        { content: "Kredit",    styles: { halign: "right",  fontSize: 7 } },
-        { content: "Saldo",     styles: { halign: "right",  fontSize: 7 } }
+        { content: "No",          styles: { halign: "center" } },
+        { content: "Tanggal",     styles: { halign: "center" } },
+        { content: "No. Ref",     styles: { halign: "center" } },
+        { content: "Keterangan",  styles: { halign: "left"   } },
+        { content: "Akun (Debit/Kredit)", styles: { halign: "left" } },
+        { content: "Kas Masuk",   styles: { halign: "right"  } },
+        { content: "Kas Keluar",  styles: { halign: "right"  } },
+        { content: "Saldo",       styles: { halign: "right"  } }
       ]],
       body: tableRows,
       theme: "grid",
@@ -489,74 +421,60 @@ function downloadDatabasePDF() {
         fillColor: BIRU,
         textColor: PUTIH,
         fontStyle: "bold",
-        fontSize: 7.2,
-        cellPadding: { top: 3.2, bottom: 3.2, left: 1.8, right: 1.8 },
+        fontSize: 7.5,
+        cellPadding: { top: 4, bottom: 4, left: 3, right: 3 },
         halign: "center"
       },
       bodyStyles: {
-        fontSize: 6.4,
+        fontSize: 7.5,
         valign: "middle",
-        cellPadding: { top: 2.2, bottom: 2.2, left: 1.8, right: 1.8 },
+        cellPadding: { top: 3, bottom: 3, left: 3, right: 3 },
         textColor: HITAM,
         overflow: "linebreak"
       },
       alternateRowStyles: { fillColor: [249, 251, 255] },
       columnStyles: {
-        0: { cellWidth: 7, halign: "center" },
-        1: { cellWidth: 15, halign: "center" },
-        2: { cellWidth: 13, halign: "center", fontSize: 6.2, textColor: [110, 110, 110] },
-        3: { cellWidth: 10, halign: "center", fontSize: 6.2 },
-        4: { cellWidth: 34, halign: "left", fontSize: 6.2 },
-        5: { cellWidth: 28, halign: "left", fontSize: 6.2 },
-        6: { cellWidth: 18, halign: "right" },
-        7: { cellWidth: 18, halign: "right" },
-        8: { cellWidth: 22, halign: "right", fontStyle: "bold" }
+        0: { cellWidth: 7,  halign: "center" },
+        1: { cellWidth: 18, halign: "center" },
+        2: { cellWidth: 18, halign: "center", fontSize: 6.5, textColor: [110, 110, 110] },
+        3: { cellWidth: 38 },
+        4: { cellWidth: 28, fontSize: 7 },
+        5: { cellWidth: 24, halign: "right" },
+        6: { cellWidth: 24, halign: "right" },
+        7: { cellWidth: 25, halign: "right", fontStyle: "bold" }
       },
       didParseCell: function(data) {
         // Warnai kas masuk hijau, kas keluar merah
-        if (data.section === "body" && data.column.index === 6 && data.cell.text[0]) {
+        if (data.section === "body" && data.column.index === 5 && data.cell.text[0]) {
           data.cell.styles.textColor = HIJAU;
         }
-        if (data.section === "body" && data.column.index === 7 && data.cell.text[0]) {
+        if (data.section === "body" && data.column.index === 6 && data.cell.text[0]) {
           data.cell.styles.textColor = MERAH;
-        }
-        // Warnai jenis transaksi
-        if (data.section === "body" && data.column.index === 3) {
-          var jenis = data.cell.text[0];
-          if (jenis === "DEBIT") {
-            data.cell.styles.textColor = [0, 130, 70];
-            data.cell.styles.fontStyle = "bold";
-          } else if (jenis === "KREDIT") {
-            data.cell.styles.textColor = [200, 30, 30];
-            data.cell.styles.fontStyle = "bold";
-          }
         }
       },
       didDrawPage: function(data) {
         // Header di setiap halaman baru (selain halaman pertama)
         if (data.pageNumber > 1) {
           doc.setFillColor.apply(doc, BIRU);
-          doc.rect(0, 0, pw, 14, "F");
+          doc.rect(0, 0, pw, 12, "F");
           doc.setFontSize(8);
           doc.setFont("helvetica", "bold");
           doc.setTextColor.apply(doc, PUTIH);
-          doc.text("LAPORAN MUTASI REKENING — " + username.toUpperCase(), ml, 9);
-          
+          doc.text("LAPORAN MUTASI TRANSAKSI — " + username.toUpperCase(), ml, 8);
           doc.setFont("helvetica", "normal");
           doc.setFontSize(7);
-          doc.setTextColor(180, 200, 240);
-          doc.text("No. Dokumen: " + noDokumen + " | Halaman " + data.pageNumber, pw - mr, 9, { align: "right" });
+          doc.text(noDokumen, pw - mr, 8, { align: "right" });
         }
         // Footer setiap halaman
         var totalPages = doc.internal.getNumberOfPages();
-        doc.setDrawColor(150, 150, 150);
+        doc.setDrawColor(200, 200, 200);
         doc.setLineWidth(0.3);
-        doc.line(ml, ph - 11, pw - mr, ph - 11);
-        doc.setFontSize(6);
+        doc.line(ml, ph - 9, pw - mr, ph - 9);
+        doc.setFontSize(7);
         doc.setFont("helvetica", "italic");
-        doc.setTextColor(120, 120, 120);
-        doc.text("Laporan ini dicetak oleh Sistem Keuangan UMKM | " + now.toLocaleString("id-ID"), ml, ph - 8);
-        doc.text("Halaman " + data.pageNumber + " dari " + totalPages + " | Berlaku untuk pengarsipan dan referensi internal", ml, ph - 4);
+        doc.setTextColor(150, 150, 150);
+        doc.text("Dicetak otomatis oleh sistem: " + now.toLocaleString("id-ID"), ml, ph - 6);
+        doc.text("Halaman " + data.pageNumber + " dari " + totalPages, pw - mr, ph - 6, { align: "right" });
       }
     });
 
@@ -575,124 +493,102 @@ function downloadDatabasePDF() {
       });
     var grandTotal = transaksi.reduce(function(s, t) { return s + t.jumlah; }, 0);
     recapRows.push([
-      { content: "TOTAL AKHIR", styles: { fontStyle: "bold", fillColor: [200, 220, 255], textColor: [0, 68, 148] } },
-      { content: rupiahPDF(grandTotal), styles: { halign: "right", fontStyle: "bold", fillColor: [200, 220, 255], textColor: [0, 68, 148] } },
-      { content: rupiahPDF(grandTotal), styles: { halign: "right", fontStyle: "bold", fillColor: [200, 220, 255], textColor: [0, 68, 148] } }
+      { content: "TOTAL", styles: { fontStyle: "bold", fillColor: [230, 234, 240] } },
+      { content: rupiahPDF(grandTotal), styles: { halign: "right", fontStyle: "bold", fillColor: [230, 234, 240] } },
+      { content: rupiahPDF(grandTotal), styles: { halign: "right", fontStyle: "bold", fillColor: [230, 234, 240] } }
     ]);
 
-    var ry = doc.lastAutoTable.finalY + 8;
-    var recapEstHeight = 12 + recapRows.length * 7;
-    if (ry + recapEstHeight > ph - 65) { doc.addPage(); ry = 18; }
+    var ry = doc.lastAutoTable.finalY + 9;
+    var recapEstHeight = 12 + recapRows.length * 6.5;
+    if (ry + recapEstHeight > ph - 55) { doc.addPage(); ry = 20; }
 
-    doc.setFontSize(8);
+    doc.setFontSize(9);
     doc.setFont("helvetica", "bold");
     doc.setTextColor.apply(doc, BIRU);
-    doc.text("RINGKASAN REKAP PER KATEGORI AKUN", ml, ry + 3);
-    doc.setLineWidth(0.8);
+    doc.text("RINGKASAN PER KATEGORI AKUN", ml, ry + 5);
+    doc.setLineWidth(0.5);
     doc.setDrawColor.apply(doc, BIRU);
-    doc.line(ml, ry + 5, ml + 70, ry + 5);
+    doc.line(ml, ry + 7, ml + 72, ry + 7);
 
     doc.autoTable({
-      startY: ry + 7,
-      margin: { left: ml, right: mr, bottom: 16 },
+      startY: ry + 10,
+      margin: { left: ml, right: mr, bottom: 14 },
       head: [[
-        { content: "Kategori Akun", styles: { halign: "left", fontSize: 7  } },
-        { content: "Total Debit",   styles: { halign: "right", fontSize: 7 } },
-        { content: "Total Kredit",  styles: { halign: "right", fontSize: 7 } }
+        { content: "Kategori Akun", styles: { halign: "left"  } },
+        { content: "Total Debit",   styles: { halign: "right" } },
+        { content: "Total Kredit",  styles: { halign: "right" } }
       ]],
       body: recapRows,
       theme: "grid",
       headStyles: {
         fillColor: ABU2, textColor: HITAM, fontStyle: "bold",
-        fontSize: 7.2, cellPadding: { top: 2.8, bottom: 2.8, left: 2.8, right: 2.8 }
+        fontSize: 7.5, cellPadding: { top: 3, bottom: 3, left: 3, right: 3 }
       },
       bodyStyles: {
-        fontSize: 6.6, cellPadding: { top: 2.3, bottom: 2.3, left: 2.8, right: 2.8 }, textColor: HITAM
+        fontSize: 7.5, cellPadding: { top: 2.5, bottom: 2.5, left: 3, right: 3 }, textColor: HITAM
       },
       columnStyles: {
-        0: { cellWidth: cw * 0.44, halign: "left" },
-        1: { cellWidth: cw * 0.28, halign: "right" },
-        2: { cellWidth: cw * 0.28, halign: "right" }
+        0: { cellWidth: cw * 0.4 },
+        1: { cellWidth: cw * 0.3, halign: "right" },
+        2: { cellWidth: cw * 0.3, halign: "right" }
       }
     });
 
     // ──────────────────────────────────────────────────────────
-    // FOOTER — CATATAN, VALIDASI & TANDA TANGAN
+    // FOOTER — CATATAN & TANDA TANGAN
     // ──────────────────────────────────────────────────────────
-    var fy = doc.lastAutoTable.finalY + 8;
-    if (fy > ph - 60) { doc.addPage(); fy = 18; }
-
-    // Informasi validasi
-    doc.setFillColor(245, 250, 255);
-    doc.roundedRect(ml, fy, cw, 18, 2, 2, "F");
-    doc.setDrawColor(150, 180, 220);
-    doc.setLineWidth(0.4);
-    doc.roundedRect(ml, fy, cw, 18, 2, 2, "S");
-
-    doc.setFontSize(7);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor.apply(doc, BIRU);
-    doc.text("INFORMASI VALIDASI DOKUMEN", ml + 3, fy + 5);
-
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(6.5);
-    doc.setTextColor(80, 80, 80);
-    doc.text("✓ Dokumen ini dicetak otomatis dari Sistem Aplikasi Keuangan UMKM", ml + 3, fy + 9);
-    doc.text("✓ Saldo mencerminkan posisi Kas dan Kas Bank pada periode laporan", ml + 3, fy + 12);
-    doc.text("✓ Laporan sah tanpa tanda tangan basah (e-statement elektronik)", ml + 3, fy + 15);
+    var fy = doc.lastAutoTable.finalY + 10;
+    if (fy > ph - 55) { doc.addPage(); fy = 20; }
 
     // Kotak catatan & tanda tangan
-    fy += 22;
     doc.setDrawColor.apply(doc, ABU2);
     doc.setLineWidth(0.4);
     doc.setFillColor.apply(doc, ABU);
-    doc.roundedRect(ml, fy, cw, 38, 2, 2, "FD");
+    doc.roundedRect(ml, fy, cw, 44, 2, 2, "FD");
 
     // Kiri — catatan
     doc.setFontSize(7.5);
     doc.setFont("helvetica", "bold");
     doc.setTextColor.apply(doc, BIRU);
-    doc.text("KETERANGAN", ml + 4, fy + 8);
+    doc.text("CATATAN", ml + 4, fy + 8);
     doc.setFont("helvetica", "normal");
     doc.setTextColor.apply(doc, HITAM);
-    doc.setFontSize(6.5);
     var notes = [
-      "• Laporan Mutasi menunjukkan setiap transaksi kas masuk dan kas keluar.",
-      "• Kolom Saldo menampilkan posisi kas setelah setiap transaksi tercatat.",
-      "• Perpaduan Debit-Kredit harus seimbang sesuai prinsip akuntansi ganda.",
-      "• Ringkasan per kategori akun menunjukkan distribusi transaksi ke masing-masing akun."
+      "• Laporan ini dicetak dari Aplikasi Keuangan UMKM.",
+      "• Saldo mencerminkan posisi Kas dan Kas Bank.",
+      "• Total Debit dan Kredit harus selalu seimbang.",
+      "• Dokumen sah tanpa tanda tangan basah (cetak otomatis sistem)."
     ];
     notes.forEach(function(n, i) {
-      doc.text(n, ml + 4, fy + 13 + i * 5, { maxWidth: cw * 0.55 });
+      doc.text(n, ml + 4, fy + 14 + i * 6, { maxWidth: cw * 0.55 });
     });
 
-    // Kanan — tanda tangan & cap
-    var sigX = pw - mr - 52;
-    doc.setFontSize(7.2);
+    // Kanan — tanda tangan
+    var sigX = pw - mr - 55;
+    doc.setFontSize(7.5);
     doc.setFont("helvetica", "normal");
     doc.setTextColor.apply(doc, HITAM);
-    doc.text("Menyetujui,", sigX, fy + 6.5);
-    doc.setFontSize(6.3);
-    doc.setTextColor(80, 80, 80);
-    doc.text(fmtTglFull(now), sigX, fy + 10.5);
-    
+    doc.text("Mengetahui,", sigX, fy + 8);
+    doc.text(fmtTgl(now), sigX, fy + 14);
     // Kotak TTD
-    doc.setDrawColor(0, 68, 148);
-    doc.setLineWidth(0.6);
-    doc.rect(sigX, fy + 12, 50, 14, "S");
+    doc.setDrawColor(180, 180, 180);
+    doc.rect(sigX, fy + 16, 50, 18, "S");
     doc.setLineWidth(0.5);
     doc.setDrawColor.apply(doc, BIRU);
-    doc.line(sigX, fy + 27, sigX + 50, fy + 27);
-    doc.setFontSize(6.8);
-    doc.setTextColor(0, 68, 148);
-    doc.setFont("helvetica", "bold");
-    doc.text("( " + username.toUpperCase() + " )", sigX + 25, fy + 30.2, { align: "center" });
-    doc.setFont("helvetica", "normal");
+    doc.line(sigX, fy + 36, sigX + 50, fy + 36);
+    doc.setFontSize(7);
     doc.setTextColor(80, 80, 80);
-    doc.text("Pimpinan / Pemilik UMKM", sigX + 25, fy + 34.0, { align: "center" });
+    doc.text("( " + username.toUpperCase() + " )", sigX + 25, fy + 40, { align: "center" });
+    doc.text("Pimpinan / Pemilik UMKM", sigX + 25, fy + 44, { align: "center" });
+
+    // Watermark ringan
+    doc.setFontSize(36);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(240, 240, 240);
+    doc.text("UMKM", pw / 2, ph / 2 + 20, { align: "center", angle: 45 });
 
     // ── simpan ────────────────────────────────────────────────
-    var nama = "Mutasi_Rekening_" + username + "_" + now.toISOString().slice(0, 10) + ".pdf";
+    var nama = "Mutasi_Transaksi_" + username + "_" + now.toISOString().slice(0, 10) + ".pdf";
     doc.save(nama);
 
   } catch (err) {
