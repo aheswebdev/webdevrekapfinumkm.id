@@ -226,7 +226,7 @@ function renderJurnalPenyesuaianPersediaan() {
   // ===============================
   // 5. HITUNG TOTAL
   // ===============================
-  const totalAset = totalPeralatan + totalPersediaan;
+  const totalAset = totalPeralatan + totalPersediaan + totalPerlengkapan;
   const totalHPP = dataHPP.reduce((sum, item) => sum + item.total, 0);
   const totalPenyesuaian = totalHPP; // sesuai screenshot
 
@@ -345,7 +345,7 @@ function renderJurnalPenyesuaianPersediaan() {
     </section>
 
     <section class="cardTotalAset">
-      <h3>Total Aset (Persediaan + Peralatan)</h3>
+      <h3>Total Aset</h3>
       <p class="amount">${formatRupiah(totalAset)}</p>
     </section>
 
