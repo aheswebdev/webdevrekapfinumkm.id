@@ -933,3 +933,4 @@ Bagian ini merupakan catatan pengembangan awal dari pembuat aplikasi (M. Zaqi Mu
 ---
 
 *Dokumen ini dapat digunakan sebagai lampiran teknis (technical documentation) pada laporan skripsi/tugas akhir terkait pengembangan sistem informasi akuntansi sederhana untuk UMKM. Struktur bab pada dokumen ini (Latar Belakang → Tujuan → Metodologi → Perancangan → Implementasi → Pengujian → Kesimpulan/Keterbatasan) juga dapat diadaptasi langsung menjadi kerangka Bab III (Analisis & Perancangan) dan Bab IV (Implementasi & Pengujian) pada laporan skripsi.*
+.*
