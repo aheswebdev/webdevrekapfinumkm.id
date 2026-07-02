@@ -986,6 +986,11 @@ main#app {
   margin-bottom: 24px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-x: auto;                    /* <-- tambahan */
+  -webkit-overflow-scrolling: touch;   /* <-- tambahan */
+}
+.cardHPP .table {
+  min-width: 640px;   /* <-- tambahan blok baru */
 }
 .cardHPP h2 {
   margin-bottom: 20px;
@@ -1014,7 +1019,7 @@ main#app {
   background: rgba(148, 163, 184, 0.08);
 }
 .cardHPP .text-right { text-align: right; }
-.cardHPP .delete-cell { text-align: center; vertical-align: middle; font-size: 42px; cursor: pointer; user-select: none; }
+.cardHPP .delete-cell { text-align: center; vertical-align: bottom; padding-bottom: 14px; font-size: 42px; cursor: pointer; user-select: none; }
 .cardHPP .delete-cell:hover { transform: scale(1.2); transition: 0.15s ease; }
 
 .table tfoot tr { border-top: 2px solid #333; }
