@@ -262,11 +262,12 @@ function downloadDatabasePDF() {
     // INFO NASABAH / PEMILIK
     // ──────────────────────────────────────────────────────────
     var y = 44;
+    var cardH = 32; // ditambah dari 26 → 32 supaya baris bawah tidak terpotong
     doc.setFillColor.apply(doc, ABU);
-    doc.roundedRect(ml, y, cw, 26, 2, 2, "F");
+    doc.roundedRect(ml, y, cw, cardH, 2, 2, "F");
     doc.setDrawColor.apply(doc, ABU2);
     doc.setLineWidth(0.4);
-    doc.roundedRect(ml, y, cw, 26, 2, 2, "S");
+    doc.roundedRect(ml, y, cw, cardH, 2, 2, "S");
 
     doc.setFontSize(7.5);
     doc.setTextColor(100, 100, 100);
@@ -280,10 +281,10 @@ function downloadDatabasePDF() {
 
     doc.setFont("helvetica", "normal");
     doc.setTextColor(100, 100, 100);
-    doc.text("Jenis Usaha", ml + 4, y + 20);
+    doc.text("Jenis Usaha", ml + 4, y + 22);
     doc.setFont("helvetica", "bold");
     doc.setTextColor.apply(doc, HITAM);
-    doc.text("UMKM", ml + 4, y + 26);
+    doc.text("UMKM", ml + 4, y + 28);
 
     // Kolom tengah
     var cx = ml + cw * 0.38;
@@ -296,10 +297,10 @@ function downloadDatabasePDF() {
 
     doc.setFont("helvetica", "normal");
     doc.setTextColor(100, 100, 100);
-    doc.text("Periode", cx, y + 20);
+    doc.text("Periode", cx, y + 22);
     doc.setFont("helvetica", "bold");
     doc.setTextColor.apply(doc, HITAM);
-    doc.text(fmtTgl(tglAwal) + " s.d. " + fmtTgl(tglAkhir), cx, y + 26);
+    doc.text(fmtTgl(tglAwal) + " s.d. " + fmtTgl(tglAkhir), cx, y + 28);
 
     // Kolom kanan — saldo
     var rx = ml + cw * 0.73;
@@ -312,15 +313,15 @@ function downloadDatabasePDF() {
 
     doc.setFont("helvetica", "normal");
     doc.setTextColor(100, 100, 100);
-    doc.text("Total Kas Keluar", rx, y + 20);
+    doc.text("Total Kas Keluar", rx, y + 22);
     doc.setFont("helvetica", "bold");
     doc.setTextColor.apply(doc, MERAH);
-    doc.text(rupiahPDF(kasOut), rx, y + 26);
+    doc.text(rupiahPDF(kasOut), rx, y + 28);
 
     // ──────────────────────────────────────────────────────────
     // RINGKASAN SALDO — strip biru
     // ──────────────────────────────────────────────────────────
-    y += 30;
+    y += cardH + 4; // ikut tinggi card + gap 4mm
     doc.setFillColor.apply(doc, BIRU);
     doc.roundedRect(ml, y, cw, 14, 2, 2, "F");
 
@@ -540,11 +541,12 @@ function downloadDatabasePDF() {
     var fy = doc.lastAutoTable.finalY + 10;
     if (fy > ph - 55) { doc.addPage(); fy = 20; }
 
-    // Kotak catatan & tanda tangan
+    // Kotak catatan & tanda tangan — tinggi 52 supaya TTD muat penuh
+    var footerH = 52;
     doc.setDrawColor.apply(doc, ABU2);
     doc.setLineWidth(0.4);
     doc.setFillColor.apply(doc, ABU);
-    doc.roundedRect(ml, fy, cw, 44, 2, 2, "FD");
+    doc.roundedRect(ml, fy, cw, footerH, 2, 2, "FD");
 
     // Kiri — catatan
     doc.setFontSize(7.5);
@@ -560,32 +562,29 @@ function downloadDatabasePDF() {
       "• Dokumen sah tanpa tanda tangan basah (cetak otomatis sistem)."
     ];
     notes.forEach(function(n, i) {
-      doc.text(n, ml + 4, fy + 14 + i * 6, { maxWidth: cw * 0.55 });
+      doc.text(n, ml + 4, fy + 16 + i * 7, { maxWidth: cw * 0.55 });
     });
 
     // Kanan — tanda tangan
-    var sigX = pw - mr - 55;
+    var sigW  = 52;
+    var sigX  = pw - mr - sigW - 2; // rata kanan dengan margin
     doc.setFontSize(7.5);
     doc.setFont("helvetica", "normal");
     doc.setTextColor.apply(doc, HITAM);
     doc.text("Mengetahui,", sigX, fy + 8);
     doc.text(fmtTgl(now), sigX, fy + 14);
-    // Kotak TTD
+    // Kotak TTD — mulai y+17, tinggi 20
     doc.setDrawColor(180, 180, 180);
-    doc.rect(sigX, fy + 16, 50, 18, "S");
+    doc.setLineWidth(0.3);
+    doc.rect(sigX, fy + 17, sigW, 20, "S");
+    // Garis nama bawah kotak
     doc.setLineWidth(0.5);
     doc.setDrawColor.apply(doc, BIRU);
-    doc.line(sigX, fy + 36, sigX + 50, fy + 36);
+    doc.line(sigX, fy + 39, sigX + sigW, fy + 39);
     doc.setFontSize(7);
     doc.setTextColor(80, 80, 80);
-    doc.text("( " + username.toUpperCase() + " )", sigX + 25, fy + 40, { align: "center" });
-    doc.text("Pimpinan / Pemilik UMKM", sigX + 25, fy + 44, { align: "center" });
-
-    // Watermark ringan
-    doc.setFontSize(36);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(240, 240, 240);
-    doc.text("UMKM", pw / 2, ph / 2 + 20, { align: "center", angle: 45 });
+    doc.text("( " + username.toUpperCase() + " )", sigX + sigW / 2, fy + 44, { align: "center" });
+    doc.text("Pimpinan / Pemilik UMKM",           sigX + sigW / 2, fy + 49, { align: "center" });
 
     // ── simpan ────────────────────────────────────────────────
     var nama = "Mutasi_Transaksi_" + username + "_" + now.toISOString().slice(0, 10) + ".pdf";
