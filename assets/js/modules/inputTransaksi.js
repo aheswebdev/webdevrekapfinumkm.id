@@ -63,6 +63,10 @@ function renderInputTransaksi() {
           <li><b>Retur penjualan kredit:</b> "Retur penjualan piutang" → Debit Retur Penjualan, Kredit Piutang Usaha</li>
           <li><b>Retur pembelian tunai:</b> "Retur pembelian" → Debit Kas, Kredit Retur Pembelian</li>
           <li><b>Retur pembelian kredit:</b> "Retur pembelian utang" → Debit Utang Usaha, Kredit Retur Pembelian</li>
+          <li><b>Diskon penjualan tunai:</b> "Diskon penjualan" → Debit Diskon Penjualan, Kredit Kas</li>
+          <li><b>Diskon penjualan kredit:</b> "Diskon penjualan piutang" → Debit Diskon Penjualan, Kredit Piutang Usaha</li>
+          <li><b>Diskon pembelian tunai:</b> "Diskon pembelian" → Debit Kas, Kredit Diskon Pembelian</li>
+          <li><b>Diskon pembelian kredit:</b> "Diskon pembelian utang" → Debit Utang Usaha, Kredit Diskon Pembelian</li>
         </ul>
       </div>
     </section>
@@ -137,6 +141,7 @@ const AKUN_RULES = [
   { kode: "401", nama: "Penjualan", kategori: "pendapatan", saldoNormal: "kredit", idnama: "penjualan" },
   { kode: "402", nama: "Pendapatan Lainnya", kategori: "pendapatan", saldoNormal: "kredit", idnama: "penjualan lainnya" },
   { kode: "403", nama: "Retur Penjualan", kategori: "pendapatan", saldoNormal: "debit", idnama: "retur penjualan" },
+  { kode: "404", nama: "Diskon Penjualan", kategori: "pendapatan", saldoNormal: "debit", idnama: "diskon penjualan" },
 
   { kode: "501", nama: "Beban Gaji", kategori: "beban", saldoNormal: "debit", idnama: "bayar gaji" },
   { kode: "501", nama: "Beban Gaji", kategori: "beban", saldoNormal: "debit", idnama: "beban gaji" },
@@ -176,6 +181,8 @@ const AKUN_RULES = [
   { kode: "513", nama: "Beban Lain-lain", kategori: "beban", saldoNormal: "debit", idnama: "beban lain-lain" },
 
   { kode: "514", nama: "Retur Pembelian", kategori: "beban", saldoNormal: "kredit", idnama: "retur pembelian" },
+
+  { kode: "515", nama: "Diskon Pembelian", kategori: "beban", saldoNormal: "kredit", idnama: "diskon pembelian" },
 ];
 
 // ===============================
@@ -218,6 +225,16 @@ function detectAkunUtama(keterangan) {
   // 🔵 RETUR PEMBELIAN (harus dicek sebelum rule "pembelian" aset)
   if (text.includes("retur pembelian")) {
     return AKUN_RULES.find(a => a.nama === "Retur Pembelian");
+  }
+
+  // 🔵 DISKON PENJUALAN (harus dicek sebelum rule "penjualan" biasa)
+  if (text.includes("diskon penjualan")) {
+    return AKUN_RULES.find(a => a.nama === "Diskon Penjualan");
+  }
+
+  // 🔵 DISKON PEMBELIAN (harus dicek sebelum rule "pembelian" aset)
+  if (text.includes("diskon pembelian")) {
+    return AKUN_RULES.find(a => a.nama === "Diskon Pembelian");
   }
 
   // ✅ PENJUALAN PIUTANG / KREDIT → AKUN UTAMA = PIUTANG USAHA
@@ -360,6 +377,22 @@ function detectAkunLawan(akunUtama, keterangan, metode = "tunai") {
     return kas;
   }
 
+  // 🔵 5d. DISKON PENJUALAN → lawan Kas, atau Piutang Usaha jika penjualan itu kredit
+  if (akunUtama.nama === "Diskon Penjualan") {
+    if (text.includes("piutang")) {
+      return AKUN_RULES.find(a => a.nama === "Piutang Usaha");
+    }
+    return kas;
+  }
+
+  // 🔵 5e. DISKON PEMBELIAN → lawan Kas, atau Utang Usaha jika pembelian itu kredit
+  if (akunUtama.nama === "Diskon Pembelian") {
+    if (text.includes("utang")) {
+      return AKUN_RULES.find(a => a.nama === "Utang Usaha");
+    }
+    return kas;
+  }
+
   // 🔵 6. PENDAPATAN & BEBAN
   if (akunUtama.kategori === "pendapatan" || akunUtama.kategori === "beban") {
     return kas;
@@ -435,8 +468,8 @@ function handleInputTransaksiSubmit(e) {
       "- kas, kas bank, piutang, persediaan, peralatan, perlengkapan\n" +
       "- utang usaha, utang bank, utang sewa, utang listrik, utang gaji, utang air, utang internet, utang telepon\n" +
       "- modal, prive\n" +
-      "- penjualan, retur penjualan\n" +
-      "- retur pembelian\n" +
+      "- penjualan, retur penjualan, diskon penjualan\n" +
+      "- retur pembelian, diskon pembelian\n" +
       "- beban gaji, beban listrik, beban air, beban internet, beban sewa,\n" +
       "  beban telepon, beban transportasi, beban perlengkapan, beban iklan,\n" +
       "  beban perawatan, beban penyusutan, beban asuransi, beban lain-lain\n\n" +
