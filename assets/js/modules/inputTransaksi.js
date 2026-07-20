@@ -59,6 +59,10 @@ function renderInputTransaksi() {
           <li><b>Beli aset kredit:</b> "Beli peralatan utang usaha" → Debit Peralatan, Kredit Utang Usaha</li>
           <li><b>Bayar beban:</b> "Bayar beban listrik" / "Beban gaji karyawan" → Debit Beban terkait, Kredit Kas</li>
           <li><b>Ambil prive:</b> "Ambil kas pribadi" → Debit Prive, Kredit Kas</li>
+          <li><b>Retur penjualan tunai:</b> "Retur penjualan" → Debit Retur Penjualan, Kredit Kas</li>
+          <li><b>Retur penjualan kredit:</b> "Retur penjualan piutang" → Debit Retur Penjualan, Kredit Piutang Usaha</li>
+          <li><b>Retur pembelian tunai:</b> "Retur pembelian" → Debit Kas, Kredit Retur Pembelian</li>
+          <li><b>Retur pembelian kredit:</b> "Retur pembelian utang" → Debit Utang Usaha, Kredit Retur Pembelian</li>
         </ul>
       </div>
     </section>
@@ -132,6 +136,7 @@ const AKUN_RULES = [
 
   { kode: "401", nama: "Penjualan", kategori: "pendapatan", saldoNormal: "kredit", idnama: "penjualan" },
   { kode: "402", nama: "Pendapatan Lainnya", kategori: "pendapatan", saldoNormal: "kredit", idnama: "penjualan lainnya" },
+  { kode: "403", nama: "Retur Penjualan", kategori: "pendapatan", saldoNormal: "debit", idnama: "retur penjualan" },
 
   { kode: "501", nama: "Beban Gaji", kategori: "beban", saldoNormal: "debit", idnama: "bayar gaji" },
   { kode: "501", nama: "Beban Gaji", kategori: "beban", saldoNormal: "debit", idnama: "beban gaji" },
@@ -169,6 +174,8 @@ const AKUN_RULES = [
   { kode: "512", nama: "Beban Asuransi", kategori: "beban", saldoNormal: "debit", idnama: "beban asuransi" },
 
   { kode: "513", nama: "Beban Lain-lain", kategori: "beban", saldoNormal: "debit", idnama: "beban lain-lain" },
+
+  { kode: "514", nama: "Retur Pembelian", kategori: "beban", saldoNormal: "kredit", idnama: "retur pembelian" },
 ];
 
 // ===============================
@@ -202,6 +209,16 @@ const PRIORITAS_KATEGORI = [
 
 function detectAkunUtama(keterangan) {
   const text = keterangan.toLowerCase();
+
+  // 🔵 RETUR PENJUALAN (harus dicek sebelum rule "penjualan" biasa)
+  if (text.includes("retur penjualan")) {
+    return AKUN_RULES.find(a => a.nama === "Retur Penjualan");
+  }
+
+  // 🔵 RETUR PEMBELIAN (harus dicek sebelum rule "pembelian" aset)
+  if (text.includes("retur pembelian")) {
+    return AKUN_RULES.find(a => a.nama === "Retur Pembelian");
+  }
 
   // ✅ PENJUALAN PIUTANG / KREDIT → AKUN UTAMA = PIUTANG USAHA
   if (
@@ -327,6 +344,22 @@ function detectAkunLawan(akunUtama, keterangan, metode = "tunai") {
     return kas;
   }
 
+  // 🔵 5b. RETUR PENJUALAN → lawan Kas, atau Piutang Usaha jika penjualan itu kredit
+  if (akunUtama.nama === "Retur Penjualan") {
+    if (text.includes("piutang")) {
+      return AKUN_RULES.find(a => a.nama === "Piutang Usaha");
+    }
+    return kas;
+  }
+
+  // 🔵 5c. RETUR PEMBELIAN → lawan Kas, atau Utang Usaha jika pembelian itu kredit
+  if (akunUtama.nama === "Retur Pembelian") {
+    if (text.includes("utang")) {
+      return AKUN_RULES.find(a => a.nama === "Utang Usaha");
+    }
+    return kas;
+  }
+
   // 🔵 6. PENDAPATAN & BEBAN
   if (akunUtama.kategori === "pendapatan" || akunUtama.kategori === "beban") {
     return kas;
@@ -402,7 +435,8 @@ function handleInputTransaksiSubmit(e) {
       "- kas, kas bank, piutang, persediaan, peralatan, perlengkapan\n" +
       "- utang usaha, utang bank, utang sewa, utang listrik, utang gaji, utang air, utang internet, utang telepon\n" +
       "- modal, prive\n" +
-      "- penjualan\n" +
+      "- penjualan, retur penjualan\n" +
+      "- retur pembelian\n" +
       "- beban gaji, beban listrik, beban air, beban internet, beban sewa,\n" +
       "  beban telepon, beban transportasi, beban perlengkapan, beban iklan,\n" +
       "  beban perawatan, beban penyusutan, beban asuransi, beban lain-lain\n\n" +
